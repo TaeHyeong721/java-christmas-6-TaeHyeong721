@@ -11,4 +11,8 @@ public enum Food {
     Food(int price) {
         this.price = price;
     }
+
+    public int getPrice() {
+        return price;
+    }
 }

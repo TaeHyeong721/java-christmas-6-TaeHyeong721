@@ -7,7 +7,6 @@ import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.MenuCategory;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -56,10 +55,26 @@ class EventPlannerTest {
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
     }
 
-    @Disabled
-    @Test
-    void 총주문금액에서_할인금액이_적용되어야_한다() {
-        //TODO: 총주문금액과 관련된 기능이 개발된 이후 테스트
+    @ParameterizedTest
+    @CsvSource(value = {"1, 78000", "15, 76600", "25, 75600"})
+    void 크리스마스_디데이_할인은_총주문금액에서_해당_금액만큼_할인_해야한다(int visitDate, int expectedPaymentAmount) {
+        //given
+        EventPlanner eventPlanner = new EventPlanner();
+        List<Menu> menus = List.of(
+                new Menu(MenuCategory.APPETIZER, Food.MUSHROOM_SOUP),
+                new Menu(MenuCategory.MAIN_COURSE, Food.T_BONE_STEAK),
+                new Menu(MenuCategory.DESSERT, Food.CHOCOLATE_CAKE),
+                new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
+        );
+        int totalOrderAmount = menus.stream()
+                .mapToInt(Menu::getPrice)
+                .sum();
+
+        //when
+        int discountAmount = eventPlanner.getDiscountAmountByChristmasEvent(visitDate);
+
+        //then
+        assertThat(totalOrderAmount - discountAmount).isEqualTo(expectedPaymentAmount);
     }
 
     @ParameterizedTest
