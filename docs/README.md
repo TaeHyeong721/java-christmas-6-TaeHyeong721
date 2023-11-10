@@ -71,7 +71,7 @@
     +--customer
 
     +--eventplanner
-        ChristmasEventConstants : 크리스마스 디데이 할인과 관련된 enum클래스
+        EventConstants : 할인 이벤트에 사용되는 상수 enum클래스
         Event : 12월 이벤트 목록 enum클래스
         EventPlanner : 이벤트를 관리하고 적용
     
