@@ -17,7 +17,7 @@ public class EventPlanner {
     public List<Event> findEventsByDate(int visitDate) {
         List<Event> events = new ArrayList<>();
 
-        if (visitDate <= ChristmasEventConstants.D_DAY.getValue()) {
+        if (visitDate <= EventConstants.CHRISTMAS_DATE.getValue()) {
             events.add(Event.CHRISTMAS_D_DAY_DISCOUNT);
         }
         if (isWeekday(visitDate)) {
@@ -41,8 +41,8 @@ public class EventPlanner {
 
     private int calculateChristmasDDayDiscount(int visitDate) {
         int firstDayOfMonth = 1;
-        int discountStartAmount = ChristmasEventConstants.DISCOUNT_START_AMOUNT.getValue();
-        int discountIncreaseUnit = ChristmasEventConstants.DISCOUNT_INCREASE_UNIT.getValue();
+        int discountStartAmount = EventConstants.CHRISTMAS_DISCOUNT_START_AMOUNT.getValue();
+        int discountIncreaseUnit = EventConstants.CHRISTMAS_DISCOUNT_INCREASE_UNIT.getValue();
 
         return discountStartAmount + (visitDate - firstDayOfMonth) * discountIncreaseUnit;
     }
@@ -51,7 +51,7 @@ public class EventPlanner {
             int dessertCount = (int)menus.stream()
                     .filter(menu -> MenuCategory.DESSERT == menu.category())
                     .count();
-            return dessertCount * 2_023;
+            return dessertCount * EventConstants.WEEKDAY_DISCOUNT_AMOUNT.getValue();
     }
 
     public int getDiscountAmount(int visitDate, List<Menu> menus) {
