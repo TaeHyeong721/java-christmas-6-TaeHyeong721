@@ -71,7 +71,9 @@
     +--customer
 
     +--eventplanner
-
+        ChristmasEventConstants : 크리스마스 디데이 할인과 관련된 상수
+        Event : 12월 이벤트 목록 상수
+        EventPlanner : 이벤트를 관리하고 적용
     +--restaurant
 
 +--view
