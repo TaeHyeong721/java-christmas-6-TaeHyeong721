@@ -50,7 +50,7 @@
     - [ ] 모든 에러 메시지는 "[ERROR]"로 시작
 - [ ] 12월 이벤트 적용
     - [x] 크리스마스 디데이 할인
-    - [ ] 평일(일요일~목요일) 디저트 메뉴 할인
+    - [x] 평일(일요일~목요일) 디저트 메뉴 할인
     - [ ] 주말(금요일,토요일) 메인 메뉴 할인
     - [ ] 특별(달력에 별표시) 할인
     - [ ] 증정 이벤트
@@ -71,10 +71,14 @@
     +--customer
 
     +--eventplanner
-        ChristmasEventConstants : 크리스마스 디데이 할인과 관련된 상수
-        Event : 12월 이벤트 목록 상수
+        ChristmasEventConstants : 크리스마스 디데이 할인과 관련된 enum클래스
+        Event : 12월 이벤트 목록 enum클래스
         EventPlanner : 이벤트를 관리하고 적용
+    
     +--restaurant
+        Food : 음식의 목록 enum클래스
+        Menu : 식당에서 제공하는 메뉴
+        MenuCategory : 식당 메뉴의 구분 enum클래스
 
 +--view
 
