@@ -50,4 +50,18 @@ public class EventService {
     private int getGiftAmount() {
         return restaurant.getGiftAmount();
     }
+
+    public int getBenefitAmount(Customer customer) {
+        List<Event> events = eventPlanner.findEventsByCustomer(customer);
+
+        int benefitAmount = events.stream()
+                .mapToInt(event -> event.calculate(customer))
+                .sum();
+
+        if (events.contains(Event.GIFT_EVENT)) {
+            benefitAmount += getGiftAmount();
+        }
+
+        return benefitAmount;
+    }
 }

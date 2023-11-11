@@ -85,4 +85,17 @@ class EventServiceTest {
         //then
         assertThat(benefitDetails).isEqualTo(expectedBenefitDetails);
     }
+
+    @Test
+    void 고객정보를_받으면_총혜택_금액을_반환한다() {
+        //given
+        Customer customer = Customer.reserveVisit(24, defaultMenus);
+
+        //when
+        int benefitAmount = eventService.getBenefitAmount(customer);
+
+        //then
+        assertThat(benefitAmount).isEqualTo(3300 + 2023 + 1000 + 25000);
+
+    }
 }
