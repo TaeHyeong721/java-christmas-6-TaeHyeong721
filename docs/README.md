@@ -69,6 +69,7 @@
 
 +--domain
     +--customer
+        Customer : 예약 정보를 담는 값 객체
 
     +--eventplanner
         DayType : 평일, 주말을 구분하는 상수 enum클래스
@@ -80,7 +81,8 @@
     +--restaurant
         Food : 음식의 목록 enum클래스
         Menu : 식당에서 제공하는 메뉴
-        MenuCategory : 식당 메뉴의 구분 enum클래스
+        Category : 식당 메뉴의 구분 enum클래스
+        Restaurant : 제공 가능한 메뉴를 관리하는 책임
 
 +--view
 
