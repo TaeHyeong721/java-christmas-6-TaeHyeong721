@@ -1,6 +1,6 @@
 package christmas.domain.restaurant;
 
-public enum MenuCategory {
+public enum Category {
     APPETIZER,
     MAIN_COURSE,
     DESSERT,
