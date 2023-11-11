@@ -16,7 +16,7 @@ class RestaurantTest {
         );
 
         //when
-        Map<Menu, Integer> giftMenu = restaurant.requestGiftMenu();
+        Map<Menu, Integer> giftMenu = restaurant.requestGift();
 
         //then
         assertThat(giftMenu).isEqualTo(expectedGift);
