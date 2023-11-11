@@ -2,37 +2,12 @@ package christmas.domain.eventplanner;
 
 import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.MenuCategory;
-import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventPlanner {
 
-    private final EventCalender eventCalender;
-
-    public EventPlanner() {
-        this.eventCalender = new EventCalender();
-    }
-
     public List<Event> findEventsByDate(int visitDate) {
-        List<Event> events = new ArrayList<>();
-
-        if (visitDate <= EventConstants.CHRISTMAS_DATE.getValue()) {
-            events.add(Event.CHRISTMAS_D_DAY_DISCOUNT);
-        }
-        if (isWeekday(visitDate)) {
-            events.add(Event.WEEKDAY_DISCOUNT);
-        }
-
-        return events;
-    }
-
-    private boolean isWeekday(int visitDate) {
-        DayOfWeek dayOfWeek = eventCalender.getDayOfWeek(visitDate);
-        return switch (dayOfWeek) {
-            case SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY -> true;
-            case FRIDAY, SATURDAY -> false;
-        };
+        return Event.from(visitDate);
     }
 
     public int getDiscountAmountByChristmasEvent(int visitDate) {
@@ -54,6 +29,13 @@ public class EventPlanner {
             return dessertCount * EventConstants.WEEKDAY_DISCOUNT_AMOUNT.getValue();
     }
 
+    public int getDiscountAmountByWeekendEvent(List<Menu> menus) {
+        int mainCount = (int)menus.stream()
+                .filter(menu -> MenuCategory.MAIN_COURSE == menu.category())
+                .count();
+        return mainCount * EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
+    }
+
     public int getDiscountAmount(int visitDate, List<Menu> menus) {
         int discountAmount = 0;
 
@@ -64,6 +46,9 @@ public class EventPlanner {
             }
             if (Event.WEEKDAY_DISCOUNT == event) {
                 discountAmount += getDiscountAmountByWeekdayEvent(menus);
+            }
+            if (Event.WEEKEND_DISCOUNT == event) {
+                discountAmount += getDiscountAmountByWeekendEvent(menus);
             }
         }
         return discountAmount;

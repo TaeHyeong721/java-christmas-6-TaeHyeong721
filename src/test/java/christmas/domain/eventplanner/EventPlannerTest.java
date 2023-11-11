@@ -111,14 +111,15 @@ class EventPlannerTest {
                 new Menu(MenuCategory.APPETIZER, Food.MUSHROOM_SOUP),
                 new Menu(MenuCategory.MAIN_COURSE, Food.T_BONE_STEAK),
                 new Menu(MenuCategory.DESSERT, Food.CHOCOLATE_CAKE),
-                new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
+                new Menu(MenuCategory.DESSERT, Food.ICE_CREAM)
         );
+        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 2;
 
         //when
         int discountAmount = eventPlanner.getDiscountAmountByWeekdayEvent(menus);
 
         //then
-        assertThat(discountAmount).isEqualTo(2_023);
+        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
     }
 
     @ParameterizedTest
@@ -147,7 +148,54 @@ class EventPlannerTest {
                 new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
         );
         return Stream.of(
-                Arguments.of(7, defaultMenus, 2)
+                Arguments.of(7, defaultMenus, 2),
+                Arguments.of(8, defaultMenus, 2)
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2})
+    void 금요일_토요일은_주말할인이다(int visitDate) {
+        //given
+        EventPlanner eventPlanner = new EventPlanner();
+
+        //when
+        List<Event> events = eventPlanner.findEventsByDate(visitDate);
+
+        //then
+        assertThat(events).contains(Event.WEEKEND_DISCOUNT);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {3, 4, 5, 6, 7})
+    void 일요일부터_목요일까지는_주말할인이_아니다(int visitDate) {
+        //given
+        EventPlanner eventPlanner = new EventPlanner();
+
+        //when
+        List<Event> events = eventPlanner.findEventsByDate(visitDate);
+
+        //then
+        assertThat(events).doesNotContain(Event.WEEKEND_DISCOUNT);
+    }
+
+    @Test
+    void 주말_할인에는_메인_메뉴_1개당_2023원_할인한다() {
+        //given
+        EventPlanner eventPlanner = new EventPlanner();
+        List<Menu> menus = List.of(
+                new Menu(MenuCategory.APPETIZER, Food.MUSHROOM_SOUP),
+                new Menu(MenuCategory.MAIN_COURSE, Food.T_BONE_STEAK),
+                new Menu(MenuCategory.MAIN_COURSE, Food.BBQ_RIBS),
+                new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
+        );
+        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 2;
+
+
+        //when
+        int discountAmount = eventPlanner.getDiscountAmountByWeekendEvent(menus);
+
+        //then
+        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
     }
 }

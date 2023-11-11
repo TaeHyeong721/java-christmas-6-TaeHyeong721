@@ -30,4 +30,24 @@ class EventCalenderTest {
                 Arguments.of(25, DayOfWeek.MONDAY)
         );
     }
+
+    @ParameterizedTest
+    @MethodSource("provideVisitDateWithExpectedDayType")
+    void 날짜를_입력하면_평일인지_주말인지_구분한다(int visitDate, DayType expectedDayType) {
+        //given
+        EventCalender eventCalender = new EventCalender();
+
+        //when
+        DayType dayType = eventCalender.getDayType(visitDate);
+
+        //then
+        assertThat(dayType).isEqualTo(expectedDayType);
+    }
+
+    private static Stream<Arguments> provideVisitDateWithExpectedDayType() {
+        return Stream.of(
+                Arguments.of(3, DayType.WEEKDAY),
+                Arguments.of(8, DayType.WEEKEND)
+        );
+    }
 }
