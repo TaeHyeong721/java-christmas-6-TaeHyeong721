@@ -6,10 +6,9 @@ import christmas.domain.eventplanner.EventPlanner;
 import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.Restaurant;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class EventService {
 
@@ -34,26 +33,21 @@ public class EventService {
     }
 
     public Map<Event, Integer> getBenefitDetails(Customer customer) {
-        Map<Event, Integer> benefitDetails = eventPlanner.findEventsByCustomer(customer).stream()
-                .collect(Collectors.toMap(
-                        Function.identity(),
-                        event -> calculateBenefitForEvent(event, customer)
-                ));
+        Map<Event, Integer> benefitDetails = new HashMap<>();
+
+        List<Event> events = eventPlanner.findEventsByCustomer(customer);
+        for (Event event : events) {
+            benefitDetails.put(event, event.calculate(customer));
+        }
+
+        if (benefitDetails.containsKey(Event.GIFT_EVENT)) {
+            benefitDetails.put(Event.GIFT_EVENT, getGiftAmount());
+        }
 
         return Collections.unmodifiableMap(benefitDetails);
     }
 
-    private int calculateBenefitForEvent(Event event, Customer customer) {
-        if (Event.GIFT_EVENT == event) {
-            return getGiftAmount();
-        }
-        return event.calculate(customer);
-    }
-
     private int getGiftAmount() {
-        Map<Menu, Integer> giftMenu = restaurant.requestGift();
-        return giftMenu.keySet().stream()
-                .mapToInt(menu -> menu.getPrice() * giftMenu.getOrDefault(menu, 0))
-                .sum();
+        return restaurant.getGiftAmount();
     }
 }
