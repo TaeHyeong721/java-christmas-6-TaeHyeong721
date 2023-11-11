@@ -3,16 +3,29 @@ package christmas.domain.eventplanner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import christmas.domain.customer.Customer;
-import christmas.domain.restaurant.Food;
 import christmas.domain.restaurant.Menu;
-import christmas.domain.restaurant.Category;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class EventTest {
+
+    private static List<Menu> defaultMenus;
+
+    @BeforeAll
+    public static void beforeAll() {
+        defaultMenus = List.of(
+                Menu.MUSHROOM_SOUP,
+                Menu.T_BONE_STEAK,
+                Menu.BBQ_RIBS,
+                Menu.SEAFOOD_PASTA,
+                Menu.CHOCOLATE_CAKE,
+                Menu.ZERO_COLA
+        );
+    }
 
     @Test
     void 첫날부터_크리스마스까지_크리스마스_디데이_할인이다() {
@@ -56,10 +69,7 @@ class EventTest {
     @ValueSource(ints = {3, 4, 5, 6, 7})
     void 일요일부터_목요일까지는_평일_할인이다(int visitDate) {
         //given
-        List<Menu> dessertMenu = List.of(
-                new Menu(Category.DESSERT, Food.CHOCOLATE_CAKE)
-        );
-        Customer customer = Customer.reserveVisit(visitDate, dessertMenu);
+        Customer customer = Customer.reserveVisit(visitDate, defaultMenus);
         DayType dayType = EventCalender.getDayType(visitDate);
 
         //when
@@ -74,10 +84,7 @@ class EventTest {
     @ValueSource(ints = {1, 2})
     void 금요일_토요일은_평일_할인이_아니다(int visitDate) {
         //given
-        List<Menu> dessertMenu = List.of(
-                new Menu(Category.DESSERT, Food.CHOCOLATE_CAKE)
-        );
-        Customer customer = Customer.reserveVisit(visitDate, dessertMenu);
+        Customer customer = Customer.reserveVisit(visitDate, defaultMenus);
         DayType dayType = EventCalender.getDayType(visitDate);
 
         //when
@@ -93,8 +100,7 @@ class EventTest {
         //given
         int visitDate = 3;
         List<Menu> noDessertMenus = List.of(
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.SEAFOOD_PASTA)
+                Menu.T_BONE_STEAK
         );
         Customer customer = Customer.reserveVisit(visitDate, noDessertMenus);
         DayType dayType = EventCalender.getDayType(visitDate);
@@ -111,14 +117,8 @@ class EventTest {
     void 평일_할인에는_디저트_메뉴_1개당_2023원_할인한다() {
         //given
         Event weekdayDiscount = Event.WEEKDAY_DISCOUNT;
-        List<Menu> menus = List.of(
-                new Menu(Category.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.DESSERT, Food.CHOCOLATE_CAKE),
-                new Menu(Category.DESSERT, Food.ICE_CREAM)
-        );
-        Customer customer = Customer.reserveVisit(1, menus);
-        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 2;
+        Customer customer = Customer.reserveVisit(1, defaultMenus);
+        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
 
         //when
         int discountAmount = weekdayDiscount.calculate(customer);
@@ -131,10 +131,7 @@ class EventTest {
     @ValueSource(ints = {1, 2})
     void 금요일_토요일은_주말할인이다(int visitDate) {
         //given
-        List<Menu> mainMenu = List.of(
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK)
-        );
-        Customer customer = Customer.reserveVisit(visitDate, mainMenu);
+        Customer customer = Customer.reserveVisit(visitDate, defaultMenus);
         DayType dayType = EventCalender.getDayType(visitDate);
 
         //when
@@ -149,10 +146,7 @@ class EventTest {
     @ValueSource(ints = {3, 4, 5, 6, 7})
     void 일요일부터_목요일까지는_주말할인이_아니다(int visitDate) {
         //given
-        List<Menu> mainMenu = List.of(
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK)
-        );
-        Customer customer = Customer.reserveVisit(visitDate, mainMenu);
+        Customer customer = Customer.reserveVisit(visitDate, defaultMenus);
         DayType dayType = EventCalender.getDayType(visitDate);
 
         //when
@@ -168,8 +162,8 @@ class EventTest {
         //given
         int visitDate = 1;
         List<Menu> noMainMenus = List.of(
-                new Menu(Category.DESSERT, Food.ICE_CREAM),
-                new Menu(Category.BEVERAGE, Food.ZERO_COLA)
+                Menu.ICE_CREAM,
+                Menu.ZERO_COLA
         );
         Customer customer = Customer.reserveVisit(visitDate, noMainMenus);
         DayType dayType = EventCalender.getDayType(visitDate);
@@ -186,14 +180,8 @@ class EventTest {
     void 주말_할인에는_메인_메뉴_1개당_2023원_할인한다() {
         //given
         Event weekendDiscount = Event.WEEKEND_DISCOUNT;
-        List<Menu> menus = List.of(
-                new Menu(Category.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.BBQ_RIBS),
-                new Menu(Category.BEVERAGE, Food.ZERO_COLA)
-        );
-        Customer customer = Customer.reserveVisit(1, menus);
-        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 2;
+        Customer customer = Customer.reserveVisit(1, defaultMenus);
+        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 3;
 
         //when
         int discountAmount = weekendDiscount.calculate(customer);
@@ -234,13 +222,7 @@ class EventTest {
     void 특별_할인이면_총주문_금액에서_1000원_할인한다() {
         //given
         Event specialDiscount = Event.SPECIAL_DISCOUNT;
-        List<Menu> menus = List.of(
-                new Menu(Category.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.BBQ_RIBS),
-                new Menu(Category.BEVERAGE, Food.ZERO_COLA)
-        );
-        Customer customer = Customer.reserveVisit(1, menus);
+        Customer customer = Customer.reserveVisit(1, defaultMenus);
         int expectedDiscountAmount = EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
 
         //when
@@ -253,13 +235,7 @@ class EventTest {
     @Test
     void 총주문_금액이_12만원_이상일_때_증정이벤트() {
         //given
-        List<Menu> menus = List.of(
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.BBQ_RIBS),
-                new Menu(Category.MAIN_COURSE, Food.SEAFOOD_PASTA),
-                new Menu(Category.MAIN_COURSE, Food.CHRISTMAS_PASTA)
-        );
-        Customer customer = Customer.reserveVisit(1, menus);
+        Customer customer = Customer.reserveVisit(1, defaultMenus);
 
         //when
         List<Event> events = Event.from(customer);
@@ -273,8 +249,8 @@ class EventTest {
     void 총주문_금액이_12만원_미만일_때_증정이벤트는_없다() {
         //given
         List<Menu> menus = List.of(
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.CHRISTMAS_PASTA)
+                Menu.T_BONE_STEAK,
+                Menu.CHRISTMAS_PASTA
         );
         Customer customer = Customer.reserveVisit(1, menus);
 
@@ -289,15 +265,7 @@ class EventTest {
     @Test
     void 이벤트는_중복_적용가능하다() {
         //given
-        List<Menu> menus = List.of(
-                new Menu(Category.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.BBQ_RIBS),
-                new Menu(Category.MAIN_COURSE, Food.SEAFOOD_PASTA),
-                new Menu(Category.DESSERT, Food.CHOCOLATE_CAKE),
-                new Menu(Category.BEVERAGE, Food.ZERO_COLA)
-        );
-        Customer customer = Customer.reserveVisit(3, menus);
+        Customer customer = Customer.reserveVisit(3, defaultMenus);
 
         //when
         List<Event> events = Event.from(customer);

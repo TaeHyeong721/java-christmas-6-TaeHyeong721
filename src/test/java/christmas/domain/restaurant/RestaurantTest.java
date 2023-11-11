@@ -12,7 +12,7 @@ class RestaurantTest {
         //given
         Restaurant restaurant = new Restaurant();
         Map<Menu, Integer> expectedGift = Map.of(
-                new Menu(Category.BEVERAGE, Food.CHAMPAGNE), 1
+                Menu.CHAMPAGNE, 1
         );
 
         //when

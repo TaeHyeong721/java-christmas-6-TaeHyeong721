@@ -1,7 +1,7 @@
 package christmas.domain.customer;
 
-import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.Category;
+import christmas.domain.restaurant.Menu;
 import java.util.List;
 
 public class Customer {
@@ -30,12 +30,12 @@ public class Customer {
 
     public int getCategoryCount(Category category) {
         return (int)menus.stream()
-                .filter(menu -> menu.category() == category)
+                .filter(menu -> menu.getCategory() == category)
                 .count();
     }
 
     public boolean hasMenuByCategory(Category category) {
         return menus.stream()
-                .anyMatch(menu -> menu.category() == category);
+                .anyMatch(menu -> menu.getCategory() == category);
     }
 }

@@ -3,8 +3,6 @@ package christmas.domain.eventplanner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import christmas.domain.customer.Customer;
-import christmas.domain.restaurant.Category;
-import christmas.domain.restaurant.Food;
 import christmas.domain.restaurant.Menu;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,12 +15,12 @@ class EventPlannerTest {
     @BeforeAll
     public static void beforeAll() {
         defaultMenus = List.of(
-                new Menu(Category.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.BBQ_RIBS),
-                new Menu(Category.MAIN_COURSE, Food.SEAFOOD_PASTA),
-                new Menu(Category.DESSERT, Food.CHOCOLATE_CAKE),
-                new Menu(Category.BEVERAGE, Food.ZERO_COLA)
+                Menu.MUSHROOM_SOUP,
+                Menu.T_BONE_STEAK,
+                Menu.BBQ_RIBS,
+                Menu.SEAFOOD_PASTA,
+                Menu.CHOCOLATE_CAKE,
+                Menu.ZERO_COLA
         );
     }
 

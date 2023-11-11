@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import christmas.domain.customer.Customer;
 import christmas.domain.eventplanner.Event;
-import christmas.domain.restaurant.Category;
-import christmas.domain.restaurant.Food;
 import christmas.domain.restaurant.Menu;
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +25,12 @@ class EventServiceTest {
     @BeforeAll
     public static void beforeAll() {
         defaultMenus = List.of(
-                new Menu(Category.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(Category.MAIN_COURSE, Food.BBQ_RIBS),
-                new Menu(Category.MAIN_COURSE, Food.SEAFOOD_PASTA),
-                new Menu(Category.DESSERT, Food.CHOCOLATE_CAKE),
-                new Menu(Category.BEVERAGE, Food.ZERO_COLA)
+                Menu.MUSHROOM_SOUP,
+                Menu.T_BONE_STEAK,
+                Menu.BBQ_RIBS,
+                Menu.SEAFOOD_PASTA,
+                Menu.CHOCOLATE_CAKE,
+                Menu.ZERO_COLA
         );
     }
 
@@ -40,9 +38,7 @@ class EventServiceTest {
     void 증정_이벤트_적용시_샴페인_1개를_증정한다() {
         //given
         Customer customer = Customer.reserveVisit(3, defaultMenus);
-        Map<Menu, Integer> expectedGift = Map.of(
-                new Menu(Category.BEVERAGE, Food.CHAMPAGNE), 1
-        );
+        Map<Menu, Integer> expectedGift = Map.of(Menu.CHAMPAGNE, 1);
 
         //when
         List<Event> events = eventService.findEventByCustomer(customer);
@@ -56,9 +52,7 @@ class EventServiceTest {
     @Test
     void 증정_이벤트_미적용시_증정품은_없다() {
         //given
-        List<Menu> menus = List.of(
-                new Menu(Category.MAIN_COURSE, Food.T_BONE_STEAK)
-        );
+        List<Menu> menus = List.of(Menu.T_BONE_STEAK);
         Customer customer = Customer.reserveVisit(3, menus);
 
         //when
