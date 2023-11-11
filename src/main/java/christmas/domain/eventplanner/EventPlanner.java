@@ -11,10 +11,6 @@ public class EventPlanner {
     }
 
     public int getDiscountAmountByChristmasEvent(int visitDate) {
-        return calculateChristmasDDayDiscount(visitDate);
-    }
-
-    private int calculateChristmasDDayDiscount(int visitDate) {
         int firstDayOfMonth = 1;
         int discountStartAmount = EventConstants.CHRISTMAS_DISCOUNT_START_AMOUNT.getValue();
         int discountIncreaseUnit = EventConstants.CHRISTMAS_DISCOUNT_INCREASE_UNIT.getValue();
@@ -36,6 +32,10 @@ public class EventPlanner {
         return mainCount * EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
     }
 
+    public int getDiscountAmountBySpecialDiscount() {
+        return EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
+    }
+
     public int getDiscountAmount(int visitDate, List<Menu> menus) {
         int discountAmount = 0;
 
@@ -49,6 +49,9 @@ public class EventPlanner {
             }
             if (Event.WEEKEND_DISCOUNT == event) {
                 discountAmount += getDiscountAmountByWeekendEvent(menus);
+            }
+            if (Event.SPECIAL_DISCOUNT == event) {
+                discountAmount += getDiscountAmountBySpecialDiscount();
             }
         }
         return discountAmount;

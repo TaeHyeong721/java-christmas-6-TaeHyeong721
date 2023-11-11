@@ -66,18 +66,43 @@ class EventTest {
     }
 
     @Test
-    void 이벤트는_중복_적용가능하다() {
+    void 이벤트_달력에_별이_있으면_특별_할인이다() {
         //given
-        int visitDate = 1;
+        int visitDate = 3;
 
         //when
-        List<Event> events = Event.from(1);
+        List<Event> events = Event.from(visitDate);
 
         //then
-        assertThat(events).hasSize(2);
+        assertThat(events).contains(Event.SPECIAL_DISCOUNT);
+    }
+
+    @Test
+    void 이벤트_달력에_별이_없으면_특별_할인이_아니다() {
+        //given
+        int visitDate = 4;
+
+        //when
+        List<Event> events = Event.from(visitDate);
+
+        //then
+        assertThat(events).doesNotContain(Event.SPECIAL_DISCOUNT);
+    }
+
+    @Test
+    void 이벤트는_중복_적용가능하다() {
+        //given
+        int visitDate = 3;
+
+        //when
+        List<Event> events = Event.from(visitDate);
+
+        //then
+        assertThat(events).hasSize(3);
         assertThat(events).contains(
                 Event.CHRISTMAS_D_DAY_DISCOUNT,
-                Event.WEEKEND_DISCOUNT
+                Event.WEEKDAY_DISCOUNT,
+                Event.SPECIAL_DISCOUNT
         );
     }
 }

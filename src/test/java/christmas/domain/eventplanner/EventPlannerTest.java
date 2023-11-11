@@ -12,35 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class EventPlannerTest {
-
-    @Test
-    void 첫날부터_크리스마스까지_크리스마스_디데이_할인이다() {
-        //given
-        int visitDate = 1;
-        EventPlanner eventPlanner = new EventPlanner();
-
-        //when
-        List<Event> events = eventPlanner.findEventsByDate(visitDate);
-
-        //then
-        assertThat(events).contains(Event.CHRISTMAS_D_DAY_DISCOUNT);
-    }
-
-    @Test
-    void 크리스마스_이후는_크리스마스_디데이_할인이_아니다() {
-        //given
-        int visitDate = 26;
-        EventPlanner eventPlanner = new EventPlanner();
-
-        //when
-        List<Event> events = eventPlanner.findEventsByDate(visitDate);
-
-        //then
-        assertThat(events).doesNotContain(Event.CHRISTMAS_D_DAY_DISCOUNT);
-    }
 
     @ParameterizedTest
     @CsvSource(value = {"1, 1000", "15, 2400", "25, 3400"})
@@ -77,32 +50,6 @@ class EventPlannerTest {
         assertThat(totalOrderAmount - discountAmount).isEqualTo(expectedPaymentAmount);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {3, 4, 5, 6, 7})
-    void 일요일부터_목요일까지는_평일_할인이다(int visitDate) {
-        //given
-        EventPlanner eventPlanner = new EventPlanner();
-
-        //when
-        List<Event> event = eventPlanner.findEventsByDate(visitDate);
-
-        //then
-        assertThat(event).contains(Event.WEEKDAY_DISCOUNT);
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2})
-    void 금요일_토요일은_평일_할인이_아니다(int visitDate) {
-        //given
-        EventPlanner eventPlanner = new EventPlanner();
-
-        //when
-        List<Event> event = eventPlanner.findEventsByDate(visitDate);
-
-        //then
-        assertThat(event).doesNotContain(Event.WEEKDAY_DISCOUNT);
-    }
-
     @Test
     void 평일_할인에는_디저트_메뉴_1개당_2023원_할인한다() {
         //given
@@ -122,63 +69,6 @@ class EventPlannerTest {
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideVisitDateAndMenusAndEventCount")
-    void 적용되는_이벤트가_여러개면_할인도_중복_적용된다(int visitDate, List<Menu> menus, int ExpectedEventCount) {
-        //given
-        EventPlanner eventPlanner = new EventPlanner();
-        int christmasDiscount = eventPlanner.getDiscountAmountByChristmasEvent(visitDate);
-        int weekdayDiscount = eventPlanner.getDiscountAmountByWeekdayEvent(menus);
-
-        //when
-        List<Event> events = eventPlanner.findEventsByDate(visitDate);
-        int discountAmount = eventPlanner.getDiscountAmount(visitDate, menus);
-
-
-        //then
-        assertThat(events).hasSize(ExpectedEventCount);
-        assertThat(discountAmount).isEqualTo(christmasDiscount + weekdayDiscount);
-    }
-
-    private static Stream<Arguments> provideVisitDateAndMenusAndEventCount() {
-        List<Menu> defaultMenus = List.of(
-                new Menu(MenuCategory.APPETIZER, Food.MUSHROOM_SOUP),
-                new Menu(MenuCategory.MAIN_COURSE, Food.T_BONE_STEAK),
-                new Menu(MenuCategory.DESSERT, Food.CHOCOLATE_CAKE),
-                new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
-        );
-        return Stream.of(
-                Arguments.of(7, defaultMenus, 2),
-                Arguments.of(8, defaultMenus, 2)
-        );
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2})
-    void 금요일_토요일은_주말할인이다(int visitDate) {
-        //given
-        EventPlanner eventPlanner = new EventPlanner();
-
-        //when
-        List<Event> events = eventPlanner.findEventsByDate(visitDate);
-
-        //then
-        assertThat(events).contains(Event.WEEKEND_DISCOUNT);
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {3, 4, 5, 6, 7})
-    void 일요일부터_목요일까지는_주말할인이_아니다(int visitDate) {
-        //given
-        EventPlanner eventPlanner = new EventPlanner();
-
-        //when
-        List<Event> events = eventPlanner.findEventsByDate(visitDate);
-
-        //then
-        assertThat(events).doesNotContain(Event.WEEKEND_DISCOUNT);
-    }
-
     @Test
     void 주말_할인에는_메인_메뉴_1개당_2023원_할인한다() {
         //given
@@ -191,11 +81,64 @@ class EventPlannerTest {
         );
         int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 2;
 
-
         //when
         int discountAmount = eventPlanner.getDiscountAmountByWeekendEvent(menus);
 
         //then
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
+    }
+
+    @Test
+    void 특별_할인이면_총주문_금액에서_1000원_할인한다() {
+        //given
+        EventPlanner eventPlanner = new EventPlanner();
+        List<Menu> menus = List.of(
+                new Menu(MenuCategory.APPETIZER, Food.MUSHROOM_SOUP),
+                new Menu(MenuCategory.MAIN_COURSE, Food.T_BONE_STEAK),
+                new Menu(MenuCategory.MAIN_COURSE, Food.BBQ_RIBS),
+                new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
+        );
+        int expectedDiscountAmount = EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
+
+        //when
+        int discountAmount = eventPlanner.getDiscountAmountBySpecialDiscount();
+
+        //then
+        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideVisitDateAndMenusAndEventCount")
+    void 적용되는_이벤트가_여러개면_할인도_중복_적용된다(
+            int visitDate,
+            List<Menu> menus,
+            int ExpectedEventCount,
+            int expectedDiscountAmount
+    ) {
+        //given
+        EventPlanner eventPlanner = new EventPlanner();
+
+        //when
+        List<Event> events = eventPlanner.findEventsByDate(visitDate);
+        int discountAmount = eventPlanner.getDiscountAmount(visitDate, menus);
+
+        //then
+        assertThat(events).hasSize(ExpectedEventCount);
+        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
+    }
+
+    private static Stream<Arguments> provideVisitDateAndMenusAndEventCount() {
+        List<Menu> defaultMenus = List.of(
+                new Menu(MenuCategory.APPETIZER, Food.MUSHROOM_SOUP),
+                new Menu(MenuCategory.MAIN_COURSE, Food.T_BONE_STEAK),
+                new Menu(MenuCategory.DESSERT, Food.CHOCOLATE_CAKE),
+                new Menu(MenuCategory.BEVERAGE, Food.ZERO_COLA)
+        );
+        return Stream.of(
+                Arguments.of(3, defaultMenus, 3, 4223),
+                Arguments.of(7, defaultMenus, 2, 3623),
+                Arguments.of(8, defaultMenus, 2, 3723)
+        );
     }
 }

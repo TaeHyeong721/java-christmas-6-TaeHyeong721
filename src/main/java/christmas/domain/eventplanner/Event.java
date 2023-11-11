@@ -6,7 +6,8 @@ import java.util.List;
 public enum Event {
     CHRISTMAS_D_DAY_DISCOUNT,
     WEEKDAY_DISCOUNT,
-    WEEKEND_DISCOUNT;
+    WEEKEND_DISCOUNT,
+    SPECIAL_DISCOUNT;
 
     public static List<Event> from(int visitDate) {
         List<Event> events = new ArrayList<>();
@@ -19,6 +20,9 @@ public enum Event {
         }
         if (DayType.WEEKEND == EventCalender.getDayType(visitDate)) {
             events.add(Event.WEEKEND_DISCOUNT);
+        }
+        if (EventCalender.hasStar(visitDate)) {
+            events.add(Event.SPECIAL_DISCOUNT);
         }
 
         return events;
