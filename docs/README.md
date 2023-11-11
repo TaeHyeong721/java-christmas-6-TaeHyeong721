@@ -51,7 +51,7 @@
 - [ ] 12월 이벤트 적용
     - [x] 크리스마스 디데이 할인
     - [x] 평일(일요일~목요일) 디저트 메뉴 할인
-    - [ ] 주말(금요일,토요일) 메인 메뉴 할인
+    - [x] 주말(금요일,토요일) 메인 메뉴 할인
     - [ ] 특별(달력에 별표시) 할인
     - [ ] 증정 이벤트
 - [ ] 적용된 이벤트 미리보기 출력
@@ -71,8 +71,10 @@
     +--customer
 
     +--eventplanner
-        EventConstants : 할인 이벤트에 사용되는 상수 enum클래스
+        DayType : 평일, 주말을 구분하는 상수 enum클래스
         Event : 12월 이벤트 목록 enum클래스
+        EventCalender : 이벤트 달력의 역할과 책임을 담당
+        EventConstants : 할인 이벤트에 사용되는 상수 enum클래스
         EventPlanner : 이벤트를 관리하고 적용
     
     +--restaurant
