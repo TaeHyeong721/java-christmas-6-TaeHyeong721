@@ -69,14 +69,11 @@ class EventServiceTest {
         //given
         Customer customer = Customer.reserveVisit(24, defaultMenus);
         Map<Menu, Integer> giftMenu = eventService.getGiftMenu(customer);
-        int giftAmount = giftMenu.entrySet().stream()
-                .mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
-                .sum();
         Map<Event, Integer> expectedBenefitDetails = Map.of(
                 Event.CHRISTMAS_D_DAY_DISCOUNT, Event.CHRISTMAS_D_DAY_DISCOUNT.calculate(customer),
                 Event.WEEKDAY_DISCOUNT, Event.WEEKDAY_DISCOUNT.calculate(customer),
                 Event.SPECIAL_DISCOUNT, Event.SPECIAL_DISCOUNT.calculate(customer),
-                Event.GIFT_EVENT, giftAmount
+                Event.GIFT_EVENT, getGiftAmount(giftMenu)
         );
 
         //when
@@ -90,12 +87,21 @@ class EventServiceTest {
     void 고객정보를_받으면_총혜택_금액을_반환한다() {
         //given
         Customer customer = Customer.reserveVisit(24, defaultMenus);
+        int expectedChristmasEventDiscount = Event.CHRISTMAS_D_DAY_DISCOUNT.calculate(customer);
+        int expectedWeekdayDiscount = Event.WEEKDAY_DISCOUNT.calculate(customer);
+        int expectedSpecialDiscount = Event.SPECIAL_DISCOUNT.calculate(customer);
+        int expectedGiftAmount = getGiftAmount(eventService.getGiftMenu(customer));
 
         //when
         int benefitAmount = eventService.getBenefitAmount(customer);
 
         //then
-        assertThat(benefitAmount).isEqualTo(3300 + 2023 + 1000 + 25000);
+        assertThat(benefitAmount).isEqualTo(expectedChristmasEventDiscount + expectedWeekdayDiscount + expectedSpecialDiscount + expectedGiftAmount);
+    }
 
+    private static int getGiftAmount(Map<Menu, Integer> giftMenu) {
+        return giftMenu.entrySet().stream()
+                .mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
+                .sum();
     }
 }
