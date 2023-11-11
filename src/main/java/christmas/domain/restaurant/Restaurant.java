@@ -7,7 +7,11 @@ public class Restaurant {
     private final Map<Menu, Integer> gift;
 
     public Restaurant() {
-        this.gift = Map.of(Menu.CHAMPAGNE, 1);
+        this.gift = defaultGift();
+    }
+
+    private static Map<Menu, Integer> defaultGift() {
+        return Map.of(Menu.CHAMPAGNE, 1);
     }
 
     public Map<Menu, Integer> requestGift() {
