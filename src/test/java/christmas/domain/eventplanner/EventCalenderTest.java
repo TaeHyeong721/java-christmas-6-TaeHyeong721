@@ -13,13 +13,8 @@ class EventCalenderTest {
     @ParameterizedTest
     @MethodSource("provideVisitDateWithExpectedDayOfWeek")
     void 날짜를_입력하면_요일을_구한다(int visitDate, DayOfWeek expectedDayOfWeek) {
-        //given
-        EventCalender eventCalender = new EventCalender();
+        DayOfWeek dayOfWeek = EventCalender.getDayOfWeek(visitDate);
 
-        //when
-        DayOfWeek dayOfWeek = eventCalender.getDayOfWeek(visitDate);
-
-        //then
         assertThat(dayOfWeek).isEqualTo(expectedDayOfWeek);
     }
 
@@ -34,13 +29,8 @@ class EventCalenderTest {
     @ParameterizedTest
     @MethodSource("provideVisitDateWithExpectedDayType")
     void 날짜를_입력하면_평일인지_주말인지_구분한다(int visitDate, DayType expectedDayType) {
-        //given
-        EventCalender eventCalender = new EventCalender();
+        DayType dayType = EventCalender.getDayType(visitDate);
 
-        //when
-        DayType dayType = eventCalender.getDayType(visitDate);
-
-        //then
         assertThat(dayType).isEqualTo(expectedDayType);
     }
 
