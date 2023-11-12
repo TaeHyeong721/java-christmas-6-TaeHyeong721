@@ -77,12 +77,12 @@ public enum Event {
     }
 
     private static int calculateWeekdayEvent(Customer customer) {
-        int dessertCount = customer.getCategoryCount(Category.DESSERT);
+        int dessertCount = customer.getOrderCountByCategory(Category.DESSERT);
         return dessertCount * EventConstants.WEEKDAY_DISCOUNT_AMOUNT.getValue();
     }
 
     private static int calculateWeekendEvent(Customer customer) {
-        int mainCount = customer.getCategoryCount(Category.MAIN_COURSE);
+        int mainCount = customer.getOrderCountByCategory(Category.MAIN_COURSE);
         return mainCount * EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
     }
 

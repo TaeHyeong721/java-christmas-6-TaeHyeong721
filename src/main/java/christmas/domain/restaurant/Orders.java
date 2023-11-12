@@ -43,4 +43,21 @@ public class Orders {
             throw new IllegalArgumentException(ErrorMessage.TOO_MANY_TOTAL_QUANTITY.getMessage());
         }
     }
+
+    public int getTotalAmount() {
+        return orders.stream()
+                .mapToInt(Order::getAmount)
+                .sum();
+    }
+
+    public int getOrderCountByCategory(Category category) {
+        return (int) orders.stream()
+                .filter(order -> order.hasMenuByCategory(category))
+                .count();
+    }
+
+    public boolean hasMenuByCategory(Category category) {
+        return orders.stream()
+                .anyMatch(order -> order.hasMenuByCategory(category));
+    }
 }

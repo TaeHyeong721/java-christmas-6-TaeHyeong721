@@ -1,20 +1,19 @@
 package christmas.domain.customer;
 
 import christmas.domain.restaurant.Category;
-import christmas.domain.restaurant.Menu;
-import java.util.List;
+import christmas.domain.restaurant.Orders;
 
 public class Customer {
 
     private final int visitDate;
-    private final List<Menu> menus;
+    private final Orders orders;
 
-    private Customer(int visitDate, List<Menu> menus) {
+    private Customer(int visitDate, Orders orders) {
         this.visitDate = visitDate;
-        this.menus = menus;
+        this.orders = orders;
     }
 
-    public static Customer reserveVisit(int visitDate, List<Menu> menus) {
+    public static Customer reserveVisit(int visitDate, Orders menus) {
         return new Customer(visitDate, menus);
     }
 
@@ -23,19 +22,14 @@ public class Customer {
     }
 
     public int getOrderAmount() {
-        return menus.stream()
-                .mapToInt(Menu::getPrice)
-                .sum();
+        return orders.getTotalAmount();
     }
 
-    public int getCategoryCount(Category category) {
-        return (int)menus.stream()
-                .filter(menu -> menu.getCategory() == category)
-                .count();
+    public int getOrderCountByCategory(Category category) {
+        return orders.getOrderCountByCategory(category);
     }
 
     public boolean hasMenuByCategory(Category category) {
-        return menus.stream()
-                .anyMatch(menu -> menu.getCategory() == category);
+        return orders.hasMenuByCategory(category);
     }
 }

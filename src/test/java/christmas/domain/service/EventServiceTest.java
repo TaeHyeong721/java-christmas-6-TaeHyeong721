@@ -5,7 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import christmas.domain.customer.Customer;
 import christmas.domain.eventplanner.Event;
 import christmas.domain.eventplanner.EventBadge;
+import christmas.domain.fixture.TestDataFactory;
 import christmas.domain.restaurant.Menu;
+import christmas.domain.restaurant.Order;
+import christmas.domain.restaurant.Orders;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -18,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 class EventServiceTest {
 
-    private static List<Menu> defaultMenus;
+    private static Orders sampleOrders;
     private EventService eventService;
 
     @BeforeEach
@@ -28,20 +31,13 @@ class EventServiceTest {
 
     @BeforeAll
     public static void beforeAll() {
-        defaultMenus = List.of(
-                Menu.MUSHROOM_SOUP,
-                Menu.T_BONE_STEAK,
-                Menu.BBQ_RIBS,
-                Menu.SEAFOOD_PASTA,
-                Menu.CHOCOLATE_CAKE,
-                Menu.ZERO_COLA
-        );
+        sampleOrders = TestDataFactory.createSampleOrders();
     }
 
     @Test
     void 증정_이벤트_적용시_증정품을_제공한다() {
         //given
-        Customer customer = Customer.reserveVisit(3, defaultMenus);
+        Customer customer = Customer.reserveVisit(3, sampleOrders);
         Set<Menu> allMenus = EnumSet.allOf(Menu.class);
 
         //when
@@ -57,8 +53,12 @@ class EventServiceTest {
     @Test
     void 증정_이벤트_미적용시_증정품은_없다() {
         //given
-        List<Menu> menus = List.of(Menu.T_BONE_STEAK);
-        Customer customer = Customer.reserveVisit(3, menus);
+        List<Order> orders = List.of(
+                new Order(Menu.MUSHROOM_SOUP.getName(), 1),
+                new Order(Menu.CHOCOLATE_CAKE.getName(), 1)
+        );
+        Orders noGiftOrders = new Orders(orders);
+        Customer customer = Customer.reserveVisit(3, noGiftOrders);
 
         //when
         List<Event> events = eventService.findEventsByCustomer(customer);
@@ -72,7 +72,7 @@ class EventServiceTest {
     @Test
     void 고객정보를_받으면_혜택_내역을_반환한다() {
         //given
-        Customer customer = Customer.reserveVisit(24, defaultMenus);
+        Customer customer = Customer.reserveVisit(24, sampleOrders);
         List<Event> events = eventService.findEventsByCustomer(customer);
         Map<Menu, Integer> giftMenu = eventService.getGiftMenu(customer);
         Map<Event, Integer> expectedBenefitDetails = getExpectedBenefitDetails(events, customer, giftMenu);
@@ -102,7 +102,7 @@ class EventServiceTest {
     @Test
     void 고객정보를_받으면_총혜택_금액을_반환한다() {
         //given
-        Customer customer = Customer.reserveVisit(24, defaultMenus);
+        Customer customer = Customer.reserveVisit(24, sampleOrders);
         List<Event> events = eventService.findEventsByCustomer(customer);
         int expectedDiscountAmount = discountAmount(events, customer);
         int expectedGiftAmount = getGiftAmount(eventService.getGiftMenu(customer));
@@ -129,7 +129,7 @@ class EventServiceTest {
     @Test
     void 고객정보를_받으면_할인_후_예상_결제_금액을_계산한다() {
         //given
-        Customer customer = Customer.reserveVisit(24, defaultMenus);
+        Customer customer = Customer.reserveVisit(24, sampleOrders);
         List<Event> events = eventService.findEventsByCustomer(customer);
         int orderAmount = customer.getOrderAmount();
         int discountAmount = discountAmount(events, customer);
@@ -144,7 +144,7 @@ class EventServiceTest {
     @Test
     void 총혜택_금액에_따라_이벤트_배지를_부여한다() {
         //given
-        Customer customer = Customer.reserveVisit(24, defaultMenus);
+        Customer customer = Customer.reserveVisit(24, sampleOrders);
 
         //when
         EventBadge badge = eventService.getBadgeForBenefitAmount(customer);

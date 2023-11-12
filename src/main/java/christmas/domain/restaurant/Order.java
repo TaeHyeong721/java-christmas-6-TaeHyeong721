@@ -28,7 +28,15 @@ public class Order {
         return quantity;
     }
 
+    public int getAmount() {
+        return menu.getPrice() * quantity;
+    }
+
     public boolean isBeverage() {
         return Category.BEVERAGE == menu.getCategory();
+    }
+
+    public boolean hasMenuByCategory(Category category) {
+        return menu.getCategory() == category;
     }
 }
