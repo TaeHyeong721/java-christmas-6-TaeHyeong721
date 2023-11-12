@@ -83,6 +83,9 @@
         Menu : 식당에서 제공하는 메뉴
         Category : 식당 메뉴의 구분 enum클래스
         Restaurant : 제공 가능한 메뉴를 관리하는 책임
+        
+    +--service
+        EventService : 고객에게 적용될 이벤트 혜택을 미리보기 위한 데이터를 제공하는 클래스
 
 +--view
 
