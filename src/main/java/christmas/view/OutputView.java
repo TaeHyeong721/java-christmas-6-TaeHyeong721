@@ -1,5 +1,7 @@
 package christmas.view;
 
+import christmas.util.ErrorMessage;
+
 public class OutputView {
 
     public void printWelcome() {
@@ -9,7 +11,7 @@ public class OutputView {
         System.out.println("<주문 메뉴>");
     }
 
-    public void printMessage(String message) {
-        System.out.println(message);
+    public void printErrorMessage(ErrorMessage errorMessage) {
+        System.out.println(errorMessage.getMessage());
     }
 }
