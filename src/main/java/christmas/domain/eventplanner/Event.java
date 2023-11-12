@@ -3,6 +3,7 @@ package christmas.domain.eventplanner;
 import christmas.domain.customer.Customer;
 import christmas.domain.restaurant.Category;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -20,9 +21,12 @@ public enum Event {
     }
 
     public static List<Event> from(Customer customer) {
+        if (isNotEligibleForEvent(customer)) {
+            return Collections.emptyList();
+        }
+
         List<Event> events = new ArrayList<>();
         int visitDate = customer.getVisitDate();
-
         if (isChristmasEvent(visitDate)) {
             events.add(CHRISTMAS_D_DAY_DISCOUNT);
         }
@@ -40,6 +44,10 @@ public enum Event {
         }
 
         return events;
+    }
+
+    private static boolean isNotEligibleForEvent(Customer customer) {
+        return customer.getOrderAmount() < 10_000;
     }
 
     private static boolean isGiftEvent(Customer customer) {
