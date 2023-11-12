@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import christmas.domain.customer.Customer;
 import christmas.domain.eventplanner.Event;
+import christmas.domain.eventplanner.EventBadge;
 import christmas.domain.restaurant.Menu;
 import java.util.Collections;
 import java.util.List;
@@ -123,5 +124,17 @@ class EventServiceTest {
 
         //then
         assertThat(paymentAmount).isEqualTo(orderAmount - discountAmount);
+    }
+
+    @Test
+    void 총혜택_금액에_따라_이벤트_배지를_부여한다() {
+        //given
+        Customer customer = Customer.reserveVisit(24, defaultMenus);
+
+        //when
+        EventBadge badge = eventService.getBadgeForBenefitAmount(customer);
+
+        //then
+        assertThat(badge).isEqualTo(EventBadge.SANTA);
     }
 }

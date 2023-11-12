@@ -2,6 +2,7 @@ package christmas.domain.service;
 
 import christmas.domain.customer.Customer;
 import christmas.domain.eventplanner.Event;
+import christmas.domain.eventplanner.EventBadge;
 import christmas.domain.eventplanner.EventPlanner;
 import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.Restaurant;
@@ -75,5 +76,10 @@ public class EventService {
         return events.stream()
                 .mapToInt(event -> event.calculate(customer))
                 .sum();
+    }
+
+    public EventBadge getBadgeForBenefitAmount(Customer customer) {
+        int benefitAmount = getBenefitAmount(customer);
+        return EventBadge.fromBenefitAmount(benefitAmount);
     }
 }
