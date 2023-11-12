@@ -52,16 +52,28 @@ public class EventService {
     }
 
     public int getBenefitAmount(Customer customer) {
+        int benefitAmount = 0;
         List<Event> events = eventPlanner.findEventsByCustomer(customer);
 
-        int benefitAmount = events.stream()
-                .mapToInt(event -> event.calculate(customer))
-                .sum();
+        benefitAmount += getDiscountAmount(customer, events);
 
         if (events.contains(Event.GIFT_EVENT)) {
             benefitAmount += getGiftAmount();
         }
 
         return benefitAmount;
+    }
+
+    public int calculatePaymentAmount(Customer customer) {
+        List<Event> events = eventPlanner.findEventsByCustomer(customer);
+        int discountAmount = getDiscountAmount(customer, events);
+
+        return customer.getOrderAmount() - discountAmount;
+    }
+
+    private int getDiscountAmount(Customer customer, List<Event> events) {
+        return events.stream()
+                .mapToInt(event -> event.calculate(customer))
+                .sum();
     }
 }

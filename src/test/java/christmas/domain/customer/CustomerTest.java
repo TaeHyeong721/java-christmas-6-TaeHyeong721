@@ -20,7 +20,7 @@ class CustomerTest {
         Customer customer = Customer.reserveVisit(1, menus);
 
         //when
-        int totalOrderAmount = customer.getTotalOrderAmount();
+        int totalOrderAmount = customer.getOrderAmount();
 
         //then
         assertThat(totalOrderAmount).isEqualTo(55_000 + 54_000 + 15_000 + 3_000);

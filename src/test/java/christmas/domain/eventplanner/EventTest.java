@@ -241,7 +241,7 @@ class EventTest {
         List<Event> events = Event.from(customer);
 
         //then
-        assertThat(customer.getTotalOrderAmount()).isGreaterThanOrEqualTo(120_000);
+        assertThat(customer.getOrderAmount()).isGreaterThanOrEqualTo(120_000);
         assertThat(events).contains(Event.GIFT_EVENT);
     }
 
@@ -258,7 +258,7 @@ class EventTest {
         List<Event> events = Event.from(customer);
 
         //then
-        assertThat(customer.getTotalOrderAmount()).isLessThan(120_000);
+        assertThat(customer.getOrderAmount()).isLessThan(120_000);
         assertThat(events).doesNotContain(Event.GIFT_EVENT);
     }
 

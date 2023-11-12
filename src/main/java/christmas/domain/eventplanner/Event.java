@@ -43,7 +43,7 @@ public enum Event {
     }
 
     private static boolean isGiftEvent(Customer customer) {
-        return customer.getTotalOrderAmount() >= 120_000;
+        return customer.getOrderAmount() >= 120_000;
     }
 
     private static boolean isSpecialEvent(int visitDate) {

@@ -22,7 +22,7 @@ public class Customer {
         return visitDate;
     }
 
-    public int getTotalOrderAmount() {
+    public int getOrderAmount() {
         return menus.stream()
                 .mapToInt(Menu::getPrice)
                 .sum();

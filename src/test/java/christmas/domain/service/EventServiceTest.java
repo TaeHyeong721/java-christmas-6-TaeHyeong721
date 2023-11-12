@@ -99,9 +99,26 @@ class EventServiceTest {
         assertThat(benefitAmount).isEqualTo(expectedChristmasEventDiscount + expectedWeekdayDiscount + expectedSpecialDiscount + expectedGiftAmount);
     }
 
-    private static int getGiftAmount(Map<Menu, Integer> giftMenu) {
+    private int getGiftAmount(Map<Menu, Integer> giftMenu) {
         return giftMenu.entrySet().stream()
                 .mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
                 .sum();
+    }
+
+    @Test
+    void 고객정보를_받으면_할인_후_예상_결제_금액을_계산한다() {
+        //given
+        Customer customer = Customer.reserveVisit(24, defaultMenus);
+        List<Event> events = eventService.findEventByCustomer(customer);
+        int orderAmount = customer.getOrderAmount();
+        int discountAmount = events.stream()
+                .mapToInt(event -> event.calculate(customer))
+                .sum();
+
+        //when
+        int paymentAmount = eventService.calculatePaymentAmount(customer);
+
+        //then
+        assertThat(paymentAmount).isEqualTo(orderAmount - discountAmount);
     }
 }
