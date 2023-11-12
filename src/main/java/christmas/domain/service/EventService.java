@@ -21,7 +21,7 @@ public class EventService {
         this.restaurant = new Restaurant();
     }
 
-    public List<Event> findEventByCustomer(Customer customer) {
+    public List<Event> findEventsByCustomer(Customer customer) {
         return eventPlanner.findEventsByCustomer(customer);
     }
 
