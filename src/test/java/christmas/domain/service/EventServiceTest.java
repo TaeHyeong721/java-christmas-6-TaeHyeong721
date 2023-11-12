@@ -87,16 +87,21 @@ class EventServiceTest {
     void 고객정보를_받으면_총혜택_금액을_반환한다() {
         //given
         Customer customer = Customer.reserveVisit(24, defaultMenus);
-        int expectedChristmasEventDiscount = Event.CHRISTMAS_D_DAY_DISCOUNT.calculate(customer);
-        int expectedWeekdayDiscount = Event.WEEKDAY_DISCOUNT.calculate(customer);
-        int expectedSpecialDiscount = Event.SPECIAL_DISCOUNT.calculate(customer);
+        List<Event> events = eventService.findEventByCustomer(customer);
+        int expectedDiscountAmount = discountAmount(events, customer);
         int expectedGiftAmount = getGiftAmount(eventService.getGiftMenu(customer));
 
         //when
         int benefitAmount = eventService.getBenefitAmount(customer);
 
         //then
-        assertThat(benefitAmount).isEqualTo(expectedChristmasEventDiscount + expectedWeekdayDiscount + expectedSpecialDiscount + expectedGiftAmount);
+        assertThat(benefitAmount).isEqualTo(expectedDiscountAmount + expectedGiftAmount);
+    }
+
+    private int discountAmount(List<Event> events, Customer customer) {
+        return events.stream()
+                .mapToInt(event -> event.calculate(customer))
+                .sum();
     }
 
     private int getGiftAmount(Map<Menu, Integer> giftMenu) {
@@ -111,9 +116,7 @@ class EventServiceTest {
         Customer customer = Customer.reserveVisit(24, defaultMenus);
         List<Event> events = eventService.findEventByCustomer(customer);
         int orderAmount = customer.getOrderAmount();
-        int discountAmount = events.stream()
-                .mapToInt(event -> event.calculate(customer))
-                .sum();
+        int discountAmount = discountAmount(events, customer);
 
         //when
         int paymentAmount = eventService.calculatePaymentAmount(customer);
