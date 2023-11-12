@@ -39,12 +39,12 @@ public class InputView {
         String input = Console.readLine();
 
         validateOrderFormat(input);
-        List<Order> orders = convertStringToMenuOrderList(input);
+        List<Order> orders = convertStringToOrderList(input);
 
         return new Orders(orders);
     }
 
-    private List<Order> convertStringToMenuOrderList(String input) {
+    private List<Order> convertStringToOrderList(String input) {
         List<Order> orders = new ArrayList<>();
 
         String[] eachOrders = input.split(",");
