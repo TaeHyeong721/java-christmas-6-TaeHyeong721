@@ -9,16 +9,16 @@ public class Orders {
     private final List<Order> orders;
 
     public Orders(List<Order> orders) {
-        validateNullOrEmpty(orders);
+        validateEmpty(orders);
         validateDuplicateMenu(orders);
         validateMaxTotalQuantity(orders);
         validateOnlyBeverage(orders);
         this.orders = orders;
     }
 
-    private void validateNullOrEmpty(List<Order> orders) {
-        if (orders == null || orders.isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] orders는 null이거나 비어있을 수 없습니다.");
+    private void validateEmpty(List<Order> orders) {
+        if (orders.isEmpty()) {
+            throw new IllegalArgumentException("[ERROR] 주문이 없습니다.");
         }
     }
 
