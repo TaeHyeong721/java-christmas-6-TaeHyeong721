@@ -54,9 +54,9 @@
     - [x] 주말(금요일,토요일) 메인 메뉴 할인
     - [x] 특별(달력에 별표시) 할인
     - [x] 증정 이벤트
-- [ ] 적용된 이벤트 미리보기 출력
-    - [ ] 주문 메뉴
-    - [ ] 할인 전 총주문 금액
+- [x] 적용된 이벤트 미리보기 출력
+    - [x] 주문 메뉴
+    - [x] 할인 전 총주문 금액
     - [x] 증정 메뉴
     - [x] 혜택 내역
     - [x] 총혜택 금액
@@ -66,27 +66,34 @@
 ## 🗃️ 디렉토리 구조
 ```
 +--controller
-    EventController : 12월 이벤트의 흐름을 관리하는 클래스
+    EventController : 12월 이벤트의 흐름을 관리하는 컨트롤러
 +--domain
     +--customer
-        Customer : 예약 정보를 담는 값 객체
+        Customer : 사용자로부터 입력받는 고객 정보를 담당
 
     +--eventplanner
         DayType : 평일, 주말을 구분하는 상수 enum클래스
-        Event : 12월 이벤트 목록 enum클래스
+        Event : 12월 이벤트 목록을 관리하고 이벤트 할인 계산 로직을 가지고 있는 enum클래스
+        EventBadge : 혜택 금액별 부여되는 이벤트 배지를 담당하는 enum클래스
         EventCalender : 이벤트 달력의 역할과 책임을 담당
-        EventConstants : 할인 이벤트에 사용되는 상수 enum클래스
-        EventPlanner : 이벤트를 관리하고 적용
+        EventConstants : 이벤트에 사용되는 상수 enum클래스
+        EventPlanner : 이벤트를 계획하고 관리하는 역할과 책임을 담당
     
     +--restaurant
-        Category : 식당 메뉴의 구분 enum클래스
-        Menu : 식당에서 제공하는 메뉴
+        Category : 식당 메뉴의 코스 구분 enum클래스
+        Menu : 식당에서 제공하는 메뉴 enum클래스
         Order : 주문 메뉴와 개수를 담는 값 객체
         Orders : Order를 묶어서 List로 관리하는 일급컬렉션
         Restaurant : 제공 가능한 메뉴를 관리하는 책임
         
     +--service
         EventService : 고객에게 적용될 이벤트 혜택을 미리보기 위한 데이터를 제공하는 클래스
+
++--dto
+EventPreviewDto : 뷰계층에서 이벤트 미리보기를 위한 정보를 담은 dto
+
++--util
+ErrorMessage : 예외 메시지를 담은 enum클래스
 
 +--view
     InputView : 사용자로부터 입력을 담당하는 클래스
