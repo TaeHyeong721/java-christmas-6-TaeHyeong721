@@ -27,10 +27,18 @@ class EventTest {
     @Test
     void 총주문_금액이_만원_미만이면_이벤트_미적용() {
         //given
+        List<Order> orders = List.of(
+                new Order(Menu.MUSHROOM_SOUP.getName(), 1),
+                new Order(Menu.ZERO_COLA.getName(), 1)
+        );
+        Orders noEventOrders = new Orders(orders);
+        Customer customer = Customer.reserveVisit(new VisitDate(24), noEventOrders);
 
         //when
+        List<Event> events = Event.from(customer);
 
         //then
+        assertThat(events.isEmpty()).isTrue();
     }
 
     @Test
@@ -123,15 +131,19 @@ class EventTest {
     @Test
     void 평일_할인에는_디저트_메뉴_1개당_2023원_할인한다() {
         //given
-        Event weekdayDiscount = Event.WEEKDAY_DISCOUNT;
-        Customer customer = Customer.reserveVisit(new VisitDate(1), sampleOrders);
-        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
+        Event weekdayEvent = Event.WEEKDAY_DISCOUNT;
+        List<Order> orders = List.of(
+                new Order(Menu.CHOCOLATE_CAKE.getName(), 2),
+                new Order(Menu.ICE_CREAM.getName(), 1)
+        );
+        Orders dessertOrder = new Orders(orders);
+        Customer customer = Customer.reserveVisit(new VisitDate(1), dessertOrder);
 
         //when
-        int discountAmount = weekdayDiscount.calculateDiscount(customer);
+        int discountAmount = weekdayEvent.calculateDiscount(customer);
 
         //then
-        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
+        assertThat(discountAmount).isEqualTo(2_023 * 3);
     }
 
     @ParameterizedTest
@@ -186,15 +198,19 @@ class EventTest {
     @Test
     void 주말_할인에는_메인_메뉴_1개당_2023원_할인한다() {
         //given
-        Event weekendDiscount = Event.WEEKEND_DISCOUNT;
-        Customer customer = Customer.reserveVisit(new VisitDate(1), sampleOrders);
-        int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 3;
+        Event weekendEvent = Event.WEEKEND_DISCOUNT;
+        List<Order> orders = List.of(
+                new Order(Menu.T_BONE_STEAK.getName(), 2),
+                new Order(Menu.CHRISTMAS_PASTA.getName(), 4)
+        );
+        Orders dessertOrder = new Orders(orders);
+        Customer customer = Customer.reserveVisit(new VisitDate(1), dessertOrder);
 
         //when
-        int discountAmount = weekendDiscount.calculateDiscount(customer);
+        int discountAmount = weekendEvent.calculateDiscount(customer);
 
         //then
-        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
+        assertThat(discountAmount).isEqualTo(2_023 * 6);
     }
 
     @Test
@@ -230,13 +246,12 @@ class EventTest {
         //given
         Event specialDiscount = Event.SPECIAL_DISCOUNT;
         Customer customer = Customer.reserveVisit(new VisitDate(1), sampleOrders);
-        int expectedDiscountAmount = EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
 
         //when
         int discountAmount = specialDiscount.calculateDiscount(customer);
 
         //then
-        assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
+        assertThat(discountAmount).isEqualTo(1_000);
     }
 
     @Test

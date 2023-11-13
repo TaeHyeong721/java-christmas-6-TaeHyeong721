@@ -1,24 +1,28 @@
 package christmas.domain.eventplanner;
 
 import christmas.domain.customer.Customer;
-import christmas.domain.restaurant.Category;
+import christmas.domain.eventplanner.strategy.ChristmasEventStrategy;
+import christmas.domain.eventplanner.strategy.EventStrategy;
+import christmas.domain.eventplanner.strategy.GiftEventStrategy;
+import christmas.domain.eventplanner.strategy.SpecialEventStrategy;
+import christmas.domain.eventplanner.strategy.WeekdayEventStrategy;
+import christmas.domain.eventplanner.strategy.WeekendEventStrategy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
 
 public enum Event {
-    CHRISTMAS_D_DAY_DISCOUNT(Event::calculateChristmasEvent, "크리스마스 디데이 할인"),
-    WEEKDAY_DISCOUNT(Event::calculateWeekdayEvent, "평일 할인"),
-    WEEKEND_DISCOUNT(Event::calculateWeekendEvent, "주말 할인"),
-    SPECIAL_DISCOUNT(customer -> calculateSpecialEvent(), "특별 할인"),
-    GIFT_EVENT(customer -> 0, "증정 이벤트");
+    CHRISTMAS_D_DAY_DISCOUNT(new ChristmasEventStrategy(), "크리스마스 디데이 할인"),
+    WEEKDAY_DISCOUNT(new WeekdayEventStrategy(), "평일 할인"),
+    WEEKEND_DISCOUNT(new WeekendEventStrategy(), "주말 할인"),
+    SPECIAL_DISCOUNT(new SpecialEventStrategy(), "특별 할인"),
+    GIFT_EVENT(new GiftEventStrategy(), "증정 이벤트");
 
-    private final Function<Customer, Integer> expression;
+    private final EventStrategy eventStrategy;
     private final String name;
 
-    Event(Function<Customer, Integer> expression, String name) {
-        this.expression = expression;
+    Event(EventStrategy eventStrategy, String name) {
+        this.eventStrategy = eventStrategy;
         this.name = name;
     }
 
@@ -28,76 +32,25 @@ public enum Event {
         }
 
         List<Event> events = new ArrayList<>();
-        int visitDate = customer.getVisitDate();
-        if (isChristmasEvent(visitDate)) {
-            events.add(CHRISTMAS_D_DAY_DISCOUNT);
-        }
-        if (isWeekdayEvent(customer)) {
-            events.add(WEEKDAY_DISCOUNT);
-        }
-        if (isWeekendEvent(customer)) {
-            events.add(WEEKEND_DISCOUNT);
-        }
-        if (isSpecialEvent(visitDate)) {
-            events.add(SPECIAL_DISCOUNT);
-        }
-        if (isGiftEvent(customer)) {
-            events.add(GIFT_EVENT);
+        for (Event event : Event.values()) {
+            if (event.appliesToCustomer(customer)) {
+                events.add(event);
+            }
         }
 
-        return events;
+        return Collections.unmodifiableList(events);
     }
 
     private static boolean isNotEligibleForEvent(Customer customer) {
         return customer.getOrderAmount() < EventConstants.MINIMUM_ORDER_AMOUNT_FOR_EVENT.getValue();
     }
 
-    private static boolean isGiftEvent(Customer customer) {
-        return customer.getOrderAmount() >= EventConstants.MINIMUM_AMOUNT_FOR_GIFT_EVENT.getValue();
-    }
-
-    private static boolean isSpecialEvent(int visitDate) {
-        return EventCalender.hasStar(visitDate);
-    }
-
-    private static boolean isWeekendEvent(Customer customer) {
-        return DayType.WEEKEND == EventCalender.getDayType(customer.getVisitDate())
-                && customer.hasMenuByCategory(Category.MAIN_COURSE);
-    }
-
-    private static boolean isWeekdayEvent(Customer customer) {
-        return DayType.WEEKDAY == EventCalender.getDayType(customer.getVisitDate())
-                && customer.hasMenuByCategory(Category.DESSERT);
-    }
-
-    private static boolean isChristmasEvent(int visitDate) {
-        return visitDate <= EventConstants.CHRISTMAS_DATE.getValue();
+    private boolean appliesToCustomer(Customer customer) {
+        return eventStrategy.checkEligibility(customer);
     }
 
     public int calculateDiscount(Customer customer) {
-        return expression.apply(customer);
-    }
-
-    private static int calculateChristmasEvent(Customer customer) {
-        int firstDayOfMonth = 1;
-        int discountStartAmount = EventConstants.CHRISTMAS_DISCOUNT_START_AMOUNT.getValue();
-        int discountIncreaseUnit = EventConstants.CHRISTMAS_DISCOUNT_INCREASE_UNIT.getValue();
-
-        return discountStartAmount + (customer.getVisitDate() - firstDayOfMonth) * discountIncreaseUnit;
-    }
-
-    private static int calculateWeekdayEvent(Customer customer) {
-        int dessertCount = customer.getTotalMenuQuantityByCategory(Category.DESSERT);
-        return dessertCount * EventConstants.WEEKDAY_DISCOUNT_AMOUNT.getValue();
-    }
-
-    private static int calculateWeekendEvent(Customer customer) {
-        int mainCount = customer.getTotalMenuQuantityByCategory(Category.MAIN_COURSE);
-        return mainCount * EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
-    }
-
-    private static int calculateSpecialEvent() {
-        return EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
+        return eventStrategy.calculateDiscount(customer);
     }
 
     public String getName() {
