@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Orders {
 
-    private static int MAX_TOTAL_QUANTITY = 20;
+    private static final int MAX_TOTAL_QUANTITY = 20;
 
-    List<Order> orders;
+    private final List<Order> orders;
 
     public Orders(List<Order> orders) {
         validateDuplicateMenu(orders);
@@ -50,14 +50,19 @@ public class Orders {
                 .sum();
     }
 
-    public int getOrderCountByCategory(Category category) {
-        return (int) orders.stream()
+    public int getTotalMenuQuantityByCategory(Category category) {
+        return orders.stream()
                 .filter(order -> order.hasMenuByCategory(category))
-                .count();
+                .mapToInt(Order::getQuantity)
+                .sum();
     }
 
     public boolean hasMenuByCategory(Category category) {
         return orders.stream()
                 .anyMatch(order -> order.hasMenuByCategory(category));
+    }
+
+    public List<Order> getOrders() {
+        return orders;
     }
 }

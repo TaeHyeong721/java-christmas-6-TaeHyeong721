@@ -1,0 +1,109 @@
+package christmas.dto;
+
+import christmas.domain.eventplanner.Event;
+import christmas.domain.eventplanner.EventBadge;
+import christmas.domain.restaurant.Menu;
+import christmas.domain.restaurant.Order;
+import christmas.domain.restaurant.Orders;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class EventPreviewDto {
+
+    private final Orders orders;
+    private final Map<Menu, Integer> giftMenu;
+    private final Map<Event, Integer> benefitDetails;
+    private final int discountAmount;
+    private final EventBadge badge;
+
+    public EventPreviewDto(
+            Orders orders,
+            Map<Menu, Integer> giftMenu,
+            Map<Event, Integer> benefitDetails,
+            int discountAmount,
+            EventBadge badge
+    ) {
+        this.orders = orders;
+        this.giftMenu = giftMenu;
+        this.benefitDetails = benefitDetails;
+        this.discountAmount = discountAmount;
+        this.badge = badge;
+    }
+
+    public String getOrderMenu() {
+        StringBuilder sb = new StringBuilder();
+        List<Order> orderList = orders.getOrders();
+        for (Order order : orderList) {
+            sb.append(String.format("%s %d개\n", order.getMenu().getName(), order.getQuantity()));
+        }
+
+        return sb.toString();
+    }
+
+    public String getOrderAmount() {
+        return String.format("%s원\n", formatAmount(orders.getTotalAmount()));
+    }
+
+    public String getGiftMenu() {
+        if (giftMenu.isEmpty()) {
+            return "없음\n";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        giftMenu.forEach((menu, quantity) -> {
+            sb.append(formatItem(menu, quantity));
+            sb.append("\n");
+        });
+
+        return sb.toString();
+    }
+
+    private String formatItem(Menu menu, Integer quantity) {
+        return String.format("%s %d개", menu.getName(), quantity);
+    }
+
+    public String getBenefitDetails() {
+        if (benefitDetails.isEmpty()) {
+            return "없음\n";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        benefitDetails.forEach((event, discount) -> {
+            sb.append(String.format("%s: -%s원", event.getName(), formatAmount(discount)));
+            sb.append("\n");
+        });
+
+        return sb.toString();
+    }
+
+    public String getBenefitAmount() {
+        if (benefitDetails.isEmpty()) {
+            return "0원\n";
+        }
+
+        int benefitAmount = benefitDetails.values().stream()
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        return String.format("-%s원\n", formatAmount(benefitAmount));
+    }
+
+    public String getPaymentAmount() {
+        int ordersAmount = orders.getTotalAmount();
+
+        return String.format("%s원\n", formatAmount(ordersAmount - discountAmount));
+    }
+
+    public String getEventBadge() {
+        if (badge.equals(EventBadge.NONE)) {
+            return "없음\n";
+        }
+        return badge.getName();
+    }
+
+    private String formatAmount(int number) {
+        return NumberFormat.getNumberInstance(Locale.KOREA).format(number);
+    }
+}

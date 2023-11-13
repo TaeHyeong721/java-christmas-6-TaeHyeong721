@@ -41,11 +41,9 @@ class EventServiceTest {
         Set<Menu> allMenus = EnumSet.allOf(Menu.class);
 
         //when
-        List<Event> events = eventService.findEventsByCustomer(customer);
         Map<Menu, Integer> gift = eventService.getGiftMenu(customer);
 
         //then
-        assertThat(events).contains(Event.GIFT_EVENT);
         assertThat(gift.keySet()).allMatch(allMenus::contains);
         assertThat(gift.values()).allMatch(count -> count > 0);
     }
@@ -61,11 +59,9 @@ class EventServiceTest {
         Customer customer = Customer.reserveVisit(3, noGiftOrders);
 
         //when
-        List<Event> events = eventService.findEventsByCustomer(customer);
         Map<Menu, Integer> gift = eventService.getGiftMenu(customer);
 
         //then
-        assertThat(events).doesNotContain(Event.GIFT_EVENT);
         assertThat(gift).isEqualTo(Collections.emptyMap());
     }
 
@@ -73,9 +69,7 @@ class EventServiceTest {
     void 고객정보를_받으면_혜택_내역을_반환한다() {
         //given
         Customer customer = Customer.reserveVisit(24, sampleOrders);
-        List<Event> events = eventService.findEventsByCustomer(customer);
-        Map<Menu, Integer> giftMenu = eventService.getGiftMenu(customer);
-        Map<Event, Integer> expectedBenefitDetails = getExpectedBenefitDetails(events, customer, giftMenu);
+        Map<Event, Integer> expectedBenefitDetails = createSampleBenefitDetails(customer);
 
         //when
         Map<Event, Integer> benefitDetails = eventService.getBenefitDetails(customer);
@@ -84,61 +78,21 @@ class EventServiceTest {
         assertThat(benefitDetails).isEqualTo(expectedBenefitDetails);
     }
 
-    private Map<Event, Integer> getExpectedBenefitDetails(
-            List<Event> events,
-            Customer customer,
-            Map<Menu, Integer> giftMenu
-    ) {
-        Map<Event, Integer> expectedBenefitDetails = new HashMap<>();
-        for (Event event : events) {
-            expectedBenefitDetails.put(event, event.calculate(customer));
-        }
-        if (events.contains(Event.GIFT_EVENT)) {
-            expectedBenefitDetails.put(Event.GIFT_EVENT, getGiftAmount(giftMenu));
-        }
-        return expectedBenefitDetails;
+    private Map<Event, Integer> createSampleBenefitDetails(Customer customer) {
+        Map<Event, Integer> benefitDetails = new HashMap<>();
+        benefitDetails.put(Event.CHRISTMAS_D_DAY_DISCOUNT, Event.CHRISTMAS_D_DAY_DISCOUNT.calculate(customer));
+        benefitDetails.put(Event.WEEKDAY_DISCOUNT, Event.WEEKDAY_DISCOUNT.calculate(customer));
+        benefitDetails.put(Event.SPECIAL_DISCOUNT, Event.SPECIAL_DISCOUNT.calculate(customer));
+        benefitDetails.put(Event.GIFT_EVENT, getGiftAmount(customer));
+
+        return benefitDetails;
     }
 
-    @Test
-    void 고객정보를_받으면_총혜택_금액을_반환한다() {
-        //given
-        Customer customer = Customer.reserveVisit(24, sampleOrders);
-        List<Event> events = eventService.findEventsByCustomer(customer);
-        int expectedDiscountAmount = discountAmount(events, customer);
-        int expectedGiftAmount = getGiftAmount(eventService.getGiftMenu(customer));
-
-        //when
-        int benefitAmount = eventService.getBenefitAmount(customer);
-
-        //then
-        assertThat(benefitAmount).isEqualTo(expectedDiscountAmount + expectedGiftAmount);
-    }
-
-    private int discountAmount(List<Event> events, Customer customer) {
-        return events.stream()
-                .mapToInt(event -> event.calculate(customer))
-                .sum();
-    }
-
-    private int getGiftAmount(Map<Menu, Integer> giftMenu) {
+    private int getGiftAmount(Customer customer) {
+        Map<Menu, Integer> giftMenu = eventService.getGiftMenu(customer);
         return giftMenu.entrySet().stream()
                 .mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
                 .sum();
-    }
-
-    @Test
-    void 고객정보를_받으면_할인_후_예상_결제_금액을_계산한다() {
-        //given
-        Customer customer = Customer.reserveVisit(24, sampleOrders);
-        List<Event> events = eventService.findEventsByCustomer(customer);
-        int orderAmount = customer.getOrderAmount();
-        int discountAmount = discountAmount(events, customer);
-
-        //when
-        int paymentAmount = eventService.calculatePaymentAmount(customer);
-
-        //then
-        assertThat(paymentAmount).isEqualTo(orderAmount - discountAmount);
     }
 
     @Test

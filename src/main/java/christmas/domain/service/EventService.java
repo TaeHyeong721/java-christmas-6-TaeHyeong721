@@ -5,7 +5,9 @@ import christmas.domain.eventplanner.Event;
 import christmas.domain.eventplanner.EventBadge;
 import christmas.domain.eventplanner.EventPlanner;
 import christmas.domain.restaurant.Menu;
+import christmas.domain.restaurant.Orders;
 import christmas.domain.restaurant.Restaurant;
+import christmas.dto.EventPreviewDto;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +21,6 @@ public class EventService {
     public EventService() {
         this.eventPlanner = new EventPlanner();
         this.restaurant = new Restaurant();
-    }
-
-    public List<Event> findEventsByCustomer(Customer customer) {
-        return eventPlanner.findEventsByCustomer(customer);
     }
 
     public Map<Menu, Integer> getGiftMenu(Customer customer) {
@@ -52,11 +50,9 @@ public class EventService {
         return restaurant.getGiftAmount();
     }
 
-    public int getBenefitAmount(Customer customer) {
-        int benefitAmount = 0;
+    private int getBenefitAmount(Customer customer) {
         List<Event> events = eventPlanner.findEventsByCustomer(customer);
-
-        benefitAmount += getDiscountAmount(customer, events);
+        int benefitAmount = getDiscountAmount(events, customer);
 
         if (events.contains(Event.GIFT_EVENT)) {
             benefitAmount += getGiftAmount();
@@ -65,21 +61,31 @@ public class EventService {
         return benefitAmount;
     }
 
-    public int calculatePaymentAmount(Customer customer) {
-        List<Event> events = eventPlanner.findEventsByCustomer(customer);
-        int discountAmount = getDiscountAmount(customer, events);
-
-        return customer.getOrderAmount() - discountAmount;
-    }
-
-    private int getDiscountAmount(Customer customer, List<Event> events) {
-        return events.stream()
-                .mapToInt(event -> event.calculate(customer))
-                .sum();
-    }
-
     public EventBadge getBadgeForBenefitAmount(Customer customer) {
         int benefitAmount = getBenefitAmount(customer);
         return EventBadge.fromBenefitAmount(benefitAmount);
+    }
+
+    public EventPreviewDto getEventPreviewDto(int visitDate, Orders orders) {
+        Customer customer = Customer.reserveVisit(visitDate, orders);
+        Map<Menu, Integer> giftMenu = getGiftMenu(customer);
+        Map<Event, Integer> benefitDetails = getBenefitDetails(customer);
+        List<Event> events = eventPlanner.findEventsByCustomer(customer);
+        int discountAmount = getDiscountAmount(events, customer);
+        EventBadge badge = getBadgeForBenefitAmount(customer);
+
+        return new EventPreviewDto(
+                orders,
+                giftMenu,
+                benefitDetails,
+                discountAmount,
+                badge
+        );
+    }
+
+    private int getDiscountAmount(List<Event> events, Customer customer) {
+        return events.stream()
+                .mapToInt(event -> event.calculate(customer))
+                .sum();
     }
 }

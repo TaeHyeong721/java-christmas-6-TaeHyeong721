@@ -25,8 +25,8 @@ public class Customer {
         return orders.getTotalAmount();
     }
 
-    public int getOrderCountByCategory(Category category) {
-        return orders.getOrderCountByCategory(category);
+    public int getTotalMenuQuantityByCategory(Category category) {
+        return orders.getTotalMenuQuantityByCategory(category);
     }
 
     public boolean hasMenuByCategory(Category category) {

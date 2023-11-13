@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.function.Function;
 
 public enum Event {
-    CHRISTMAS_D_DAY_DISCOUNT(Event::calculateChristmasEvent),
-    WEEKDAY_DISCOUNT(Event::calculateWeekdayEvent),
-    WEEKEND_DISCOUNT(Event::calculateWeekendEvent),
-    SPECIAL_DISCOUNT(customer -> calculateSpecialEvent()),
-    GIFT_EVENT(customer -> 0);
+    CHRISTMAS_D_DAY_DISCOUNT(Event::calculateChristmasEvent, "크리스마스 디데이 할인"),
+    WEEKDAY_DISCOUNT(Event::calculateWeekdayEvent, "평일 할인"),
+    WEEKEND_DISCOUNT(Event::calculateWeekendEvent, "주말 할인"),
+    SPECIAL_DISCOUNT(customer -> calculateSpecialEvent(), "특별 할인"),
+    GIFT_EVENT(customer -> 0, "증정 이벤트");
 
     private final Function<Customer, Integer> expression;
+    private final String name;
 
-    Event(Function<Customer, Integer> expression) {
+    Event(Function<Customer, Integer> expression, String name) {
         this.expression = expression;
+        this.name = name;
     }
 
     public static List<Event> from(Customer customer) {
@@ -47,11 +49,11 @@ public enum Event {
     }
 
     private static boolean isNotEligibleForEvent(Customer customer) {
-        return customer.getOrderAmount() < 10_000;
+        return customer.getOrderAmount() < EventConstants.MINIMUM_ORDER_AMOUNT_FOR_EVENT.getValue();
     }
 
     private static boolean isGiftEvent(Customer customer) {
-        return customer.getOrderAmount() >= 120_000;
+        return customer.getOrderAmount() >= EventConstants.MINIMUM_AMOUNT_FOR_GIFT_EVENT.getValue();
     }
 
     private static boolean isSpecialEvent(int visitDate) {
@@ -85,16 +87,20 @@ public enum Event {
     }
 
     private static int calculateWeekdayEvent(Customer customer) {
-        int dessertCount = customer.getOrderCountByCategory(Category.DESSERT);
+        int dessertCount = customer.getTotalMenuQuantityByCategory(Category.DESSERT);
         return dessertCount * EventConstants.WEEKDAY_DISCOUNT_AMOUNT.getValue();
     }
 
     private static int calculateWeekendEvent(Customer customer) {
-        int mainCount = customer.getOrderCountByCategory(Category.MAIN_COURSE);
+        int mainCount = customer.getTotalMenuQuantityByCategory(Category.MAIN_COURSE);
         return mainCount * EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
     }
 
     private static int calculateSpecialEvent() {
         return EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
+    }
+
+    public String getName() {
+        return name;
     }
 }
