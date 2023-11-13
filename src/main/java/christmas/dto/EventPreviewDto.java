@@ -36,13 +36,14 @@ public class EventPreviewDto {
         StringBuilder sb = new StringBuilder();
         List<Order> orderList = orders.getOrders();
         for (Order order : orderList) {
-            sb.append(String.format("%s %d개\n", order.getMenu().getName(), order.getQuantity()));
+            sb.append(formatItem(order.getMenuName(), order.getQuantity()));
+            sb.append("\n");
         }
 
         return sb.toString();
     }
 
-    public String getOrderAmount() {
+    public String getTotalOrderAmount() {
         return String.format("%s원\n", formatAmount(orders.getTotalAmount()));
     }
 
@@ -53,15 +54,15 @@ public class EventPreviewDto {
 
         StringBuilder sb = new StringBuilder();
         giftMenu.forEach((menu, quantity) -> {
-            sb.append(formatItem(menu, quantity));
+            sb.append(formatItem(menu.getName(), quantity));
             sb.append("\n");
         });
 
         return sb.toString();
     }
 
-    private String formatItem(Menu menu, Integer quantity) {
-        return String.format("%s %d개", menu.getName(), quantity);
+    private String formatItem(String name, Integer quantity) {
+        return String.format("%s %d개", name, quantity);
     }
 
     public String getBenefitDetails() {
@@ -100,6 +101,7 @@ public class EventPreviewDto {
         if (badge.equals(EventBadge.NONE)) {
             return "없음\n";
         }
+
         return badge.getName();
     }
 

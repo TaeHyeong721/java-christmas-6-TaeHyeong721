@@ -24,7 +24,7 @@ public class OutputView {
 
     public void printOrderAmount(EventPreviewDto eventPreviewDto) {
         System.out.println("<할인 전 총주문 금액>");
-        System.out.println(eventPreviewDto.getOrderAmount());
+        System.out.println(eventPreviewDto.getTotalOrderAmount());
     }
 
     public void printGiftMenu(EventPreviewDto eventPreviewDto) {
