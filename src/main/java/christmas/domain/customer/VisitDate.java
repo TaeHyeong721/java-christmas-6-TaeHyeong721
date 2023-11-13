@@ -1,7 +1,5 @@
 package christmas.domain.customer;
 
-import christmas.util.ErrorMessage;
-
 public record VisitDate(int value) {
 
     public VisitDate {
@@ -10,7 +8,7 @@ public record VisitDate(int value) {
 
     private void validateDateInRange(int date) {
         if (date < 1 || date > 31) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT_VISIT_DATE.getMessage());
+            throw new IllegalArgumentException("[ERROR] 방문할 날짜는 1 이상 31 이하의 숫자만 가능합니다.");
         }
     }
 }

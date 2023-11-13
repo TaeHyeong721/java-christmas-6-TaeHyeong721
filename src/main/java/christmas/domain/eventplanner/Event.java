@@ -7,6 +7,7 @@ import christmas.domain.eventplanner.strategy.GiftEventStrategy;
 import christmas.domain.eventplanner.strategy.SpecialEventStrategy;
 import christmas.domain.eventplanner.strategy.WeekdayEventStrategy;
 import christmas.domain.eventplanner.strategy.WeekendEventStrategy;
+import christmas.domain.restaurant.Gift;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +52,14 @@ public enum Event {
 
     public int calculateDiscount(Customer customer) {
         return eventStrategy.calculateDiscount(customer);
+    }
+
+    public int calculateBenefit(Customer customer) {
+        return eventStrategy.calculateBenefit(customer);
+    }
+
+    public Gift getGift() {
+        return eventStrategy.getGift();
     }
 
     public String getName() {

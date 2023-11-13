@@ -4,20 +4,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import christmas.domain.customer.Customer;
 import christmas.domain.customer.VisitDate;
+import christmas.domain.restaurant.Gift;
 import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.Order;
 import christmas.domain.restaurant.Orders;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class EventPlannerTest {
 
     private static Orders defaultOrders;
+    private static EventPlanner eventPlanner;
 
     @BeforeAll
     public static void beforeAll() {
         defaultOrders = new Orders(testOrders());
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        eventPlanner = new EventPlanner();
     }
 
     private static List<Order> testOrders() {
@@ -35,7 +43,6 @@ class EventPlannerTest {
     void 고객정보를_받으면_적용되는_이벤트_목록을_반환한다() {
         //given
         Customer customer = Customer.reserveVisit(new VisitDate(24), defaultOrders);
-        EventPlanner eventPlanner = new EventPlanner();
 
         //when
         List<Event> events = eventPlanner.findEventsByCustomer(customer);
@@ -47,5 +54,18 @@ class EventPlannerTest {
                 Event.SPECIAL_DISCOUNT,
                 Event.GIFT_EVENT
         );
+    }
+
+    @Test
+    void 증정품을_주는_이벤트가_있으면_증정품을_반환한다() {
+        //given
+        Customer customer = Customer.reserveVisit(new VisitDate(3), defaultOrders);
+        Gift expectedGift = Gift.asGiveaway();
+
+        //when
+        Gift gift = eventPlanner.getGift(customer);
+
+        //then
+        assertThat(gift.getItems()).isEqualTo(expectedGift.getItems());
     }
 }

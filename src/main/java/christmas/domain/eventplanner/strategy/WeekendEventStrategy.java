@@ -4,8 +4,9 @@ import christmas.domain.customer.Customer;
 import christmas.domain.eventplanner.DayType;
 import christmas.domain.eventplanner.EventCalender;
 import christmas.domain.restaurant.Category;
+import christmas.domain.restaurant.Gift;
 
-public class WeekendEventStrategy implements EventStrategy{
+public class WeekendEventStrategy implements EventStrategy {
 
     private static final int DISCOUNT_AMOUNT_PER_QUANTITY = 2_023;
 
@@ -17,7 +18,17 @@ public class WeekendEventStrategy implements EventStrategy{
 
     @Override
     public int calculateDiscount(Customer customer) {
-        int mainCount = customer.getTotalMenuQuantityByCategory(Category.MAIN_COURSE);
-        return mainCount * DISCOUNT_AMOUNT_PER_QUANTITY;
+        int mainQuantity = customer.getTotalMenuQuantityByCategory(Category.MAIN_COURSE);
+        return mainQuantity * DISCOUNT_AMOUNT_PER_QUANTITY;
+    }
+
+    @Override
+    public int calculateBenefit(Customer customer) {
+        return calculateDiscount(customer);
+    }
+
+    @Override
+    public Gift getGift() {
+        return Gift.empty();
     }
 }

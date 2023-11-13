@@ -55,4 +55,20 @@ class GiftTest {
         assertThat(gift.isEmpty()).isTrue();
         assertThat(giftItems).isEqualTo(Collections.emptyMap());
     }
+
+    @Test
+    void 증정품을_합치면_합친_증정품이_반환된다() {
+        //given
+        Gift baseGift = Gift.asGiveaway();
+        Gift otherGift = Gift.asGiveaway();
+        Map<Menu, Integer> expectedGift = Map.of(
+                Menu.CHAMPAGNE, 2
+        );
+
+        //when
+        Gift mergedGift = baseGift.merge(otherGift);
+
+        //then
+        assertThat(mergedGift.getItems()).isEqualTo(expectedGift);
+    }
 }

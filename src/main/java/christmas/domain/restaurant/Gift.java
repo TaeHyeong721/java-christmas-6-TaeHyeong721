@@ -1,6 +1,7 @@
 package christmas.domain.restaurant;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Gift {
@@ -23,6 +24,15 @@ public class Gift {
 
     public boolean isEmpty() {
         return gift.isEmpty();
+    }
+
+    public Gift merge(Gift otherGift) {
+        Map<Menu, Integer> baseItems = new HashMap<>(this.getItems());
+        otherGift.getItems().forEach((menu, quantity) ->
+                baseItems.merge(menu, quantity, Integer::sum)
+        );
+
+        return new Gift(baseItems);
     }
 
     public Map<Menu, Integer> getItems() {

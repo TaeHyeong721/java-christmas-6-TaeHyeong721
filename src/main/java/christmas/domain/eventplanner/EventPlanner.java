@@ -6,17 +6,16 @@ import java.util.List;
 
 public class EventPlanner {
 
-    private final Gift gift;
-
-    public EventPlanner() {
-        this.gift = Gift.asGiveaway();
-    }
-
     public List<Event> findEventsByCustomer(Customer customer) {
         return Event.from(customer);
     }
 
-    public Gift requestGift() {
-        return gift;
+    public Gift getGift(Customer customer) {
+        List<Event> events = Event.from(customer);
+
+        return events.stream()
+                .map(Event::getGift)
+                .filter(gift -> !gift.isEmpty())
+                .reduce(Gift.empty(), Gift::merge);
     }
 }

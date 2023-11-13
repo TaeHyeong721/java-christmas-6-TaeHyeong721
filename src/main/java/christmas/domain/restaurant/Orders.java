@@ -1,6 +1,5 @@
 package christmas.domain.restaurant;
 
-import christmas.util.ErrorMessage;
 import java.util.List;
 
 public class Orders {
@@ -10,16 +9,16 @@ public class Orders {
     private final List<Order> orders;
 
     public Orders(List<Order> orders) {
-        validateEmpty(orders);
+        validateNullOrEmpty(orders);
         validateDuplicateMenu(orders);
         validateMaxTotalQuantity(orders);
         validateOnlyBeverage(orders);
         this.orders = orders;
     }
 
-    private void validateEmpty(List<Order> orders) {
+    private void validateNullOrEmpty(List<Order> orders) {
         if (orders == null || orders.isEmpty()) {
-            throw new IllegalArgumentException("orders는 null이거나 비어있을 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] orders는 null이거나 비어있을 수 없습니다.");
         }
     }
 
@@ -27,7 +26,7 @@ public class Orders {
         boolean isOnlyBeverage = orders.stream()
                 .allMatch(Order::isBeverage);
         if (isOnlyBeverage) {
-            throw new IllegalArgumentException(ErrorMessage.CANT_ORDERS_ONLY_BEVERAGE.getMessage());
+            throw new IllegalArgumentException("[ERROR] 음료만 주문 시, 주문할 수 없습니다.");
         }
     }
 
@@ -38,7 +37,7 @@ public class Orders {
                 .count() != orders.size();
 
         if (isDuplicateMenu) {
-            throw new IllegalArgumentException(ErrorMessage.DUPLICATE_MENU.getMessage());
+            throw new IllegalArgumentException("[ERROR] 중복 메뉴는 허용하지 않습니다.");
         }
     }
 
@@ -47,7 +46,7 @@ public class Orders {
                 .mapToInt(Order::getQuantity)
                 .sum();
         if (totalQuantity > MAX_TOTAL_QUANTITY) {
-            throw new IllegalArgumentException(ErrorMessage.TOO_MANY_TOTAL_QUANTITY.getMessage());
+            throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 최대 20개까지만 주문할 수 있습니다.");
         }
     }
 

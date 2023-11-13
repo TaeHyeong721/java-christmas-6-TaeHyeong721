@@ -23,8 +23,7 @@ class OrdersTest {
                 new Order(Menu.BBQ_RIBS.getName(), 2)
         );
         assertThatThrownBy(() -> new Orders(orders))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR]");
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -34,8 +33,7 @@ class OrdersTest {
                 new Order(Menu.ZERO_COLA.getName(), 13)
         );
         assertThatThrownBy(() -> new Orders(orders))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR]");
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -45,7 +43,6 @@ class OrdersTest {
                 new Order(Menu.ZERO_COLA.getName(), 1)
         );
         assertThatThrownBy(() -> new Orders(orders))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR]");
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

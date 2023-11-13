@@ -45,6 +45,7 @@ class EventServiceTest {
         Gift gift = eventService.getGiftMenu(customer);
         Map<Menu, Integer> giftItems = gift.getItems();
 
+
         //then
         assertThat(giftItems.keySet()).allMatch(allMenus::contains);
         assertThat(giftItems.values()).allMatch(count -> count > 0);
@@ -85,14 +86,9 @@ class EventServiceTest {
         benefitDetails.put(Event.CHRISTMAS_D_DAY_DISCOUNT, Event.CHRISTMAS_D_DAY_DISCOUNT.calculateDiscount(customer));
         benefitDetails.put(Event.WEEKDAY_DISCOUNT, Event.WEEKDAY_DISCOUNT.calculateDiscount(customer));
         benefitDetails.put(Event.SPECIAL_DISCOUNT, Event.SPECIAL_DISCOUNT.calculateDiscount(customer));
-        benefitDetails.put(Event.GIFT_EVENT, getGiftAmount(customer));
+        benefitDetails.put(Event.GIFT_EVENT, Event.GIFT_EVENT.getGift().getTotalAmount());
 
         return benefitDetails;
-    }
-
-    private int getGiftAmount(Customer customer) {
-        Gift gift = eventService.getGiftMenu(customer);
-        return gift.getTotalAmount();
     }
 
     @Test

@@ -4,7 +4,6 @@ import camp.nextstep.edu.missionutils.Console;
 import christmas.domain.customer.VisitDate;
 import christmas.domain.restaurant.Order;
 import christmas.domain.restaurant.Orders;
-import christmas.util.ErrorMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -24,7 +23,7 @@ public class InputView {
         try {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_NUMBER_FORMAT.getMessage());
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 날짜입니다.");
         }
     }
 
@@ -46,7 +45,7 @@ public class InputView {
             String[] orderParts = order.split("-");
 
             if (orderParts.length != 2) {
-                throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT_ORDER_FORMAT.getMessage());
+                throw new IllegalArgumentException("[ERROR] 입력한 주문 형식이 유효하지 않습니다.");
             }
 
             String menuName = orderParts[0];
@@ -61,7 +60,7 @@ public class InputView {
     private void validateOrderFormat(String input) {
         boolean matchesOrderFormat = Pattern.matches("^([가-힣]+-\\d+)(,[가-힣]+-\\d+)*$", input);
         if (!matchesOrderFormat) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT_ORDER_FORMAT.getMessage());
+            throw new IllegalArgumentException("[ERROR] 입력한 주문 형식이 유효하지 않습니다.");
         }
     }
 }

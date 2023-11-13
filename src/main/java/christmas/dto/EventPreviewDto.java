@@ -98,7 +98,7 @@ public class EventPreviewDto {
     }
 
     public String getEventBadge() {
-        if (badge.equals(EventBadge.NONE)) {
+        if (EventBadge.NONE.equals(badge)) {
             return "없음\n";
         }
 

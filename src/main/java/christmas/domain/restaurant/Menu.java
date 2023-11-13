@@ -1,6 +1,5 @@
 package christmas.domain.restaurant;
 
-import christmas.util.ErrorMessage;
 import java.util.Arrays;
 
 public enum Menu {
@@ -32,7 +31,7 @@ public enum Menu {
                 .filter(menu -> menu.getName().equals(menuName))
                 .findFirst()
                 .orElseThrow(() ->
-                        new IllegalArgumentException(ErrorMessage.NOT_FOUND_MENU_BY_NAME.getMessage())
+                        new IllegalArgumentException("해당 이름으로 메뉴를 찾을 수 없습니다.")
                 );
     }
 

@@ -1,7 +1,5 @@
 package christmas.domain.restaurant;
 
-import christmas.util.ErrorMessage;
-
 public class Order {
 
     private final Menu menu;
@@ -16,7 +14,7 @@ public class Order {
 
     private void validateQuantity(int quantity) {
         if (quantity < 1) {
-            throw new IllegalArgumentException(ErrorMessage.QUANTITY_BELOW_MINIMUM.getMessage());
+            throw new IllegalArgumentException("[ERROR] 수량은 최소 1개 이상이어야 합니다.");
         }
     }
 
