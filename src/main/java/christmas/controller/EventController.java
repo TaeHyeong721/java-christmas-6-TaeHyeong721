@@ -25,6 +25,7 @@ public class EventController {
 
         VisitDate visitDate = retryInputForValidVisitDate();
         Orders orders = retryInputForValidOrders();
+
         printEventPreviewBenefit(visitDate, orders);
     }
 
