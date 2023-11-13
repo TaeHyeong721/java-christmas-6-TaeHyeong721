@@ -5,9 +5,8 @@ import christmas.domain.customer.VisitDate;
 import christmas.domain.eventplanner.Event;
 import christmas.domain.eventplanner.EventBadge;
 import christmas.domain.eventplanner.EventPlanner;
-import christmas.domain.restaurant.Menu;
+import christmas.domain.restaurant.Gift;
 import christmas.domain.restaurant.Orders;
-import christmas.domain.restaurant.Restaurant;
 import christmas.dto.EventPreviewDto;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,19 +16,17 @@ import java.util.Map;
 public class EventService {
 
     private final EventPlanner eventPlanner;
-    private final Restaurant restaurant;
 
     public EventService() {
         this.eventPlanner = new EventPlanner();
-        this.restaurant = new Restaurant();
     }
 
-    public Map<Menu, Integer> getGiftMenu(Customer customer) {
+    public Gift getGiftMenu(Customer customer) {
         List<Event> events = eventPlanner.findEventsByCustomer(customer);
         if (events.contains(Event.GIFT_EVENT)) {
-            return restaurant.requestGift();
+            return eventPlanner.requestGift();
         }
-        return Collections.emptyMap();
+        return Gift.empty();
     }
 
     public Map<Event, Integer> getBenefitDetails(Customer customer) {
@@ -37,18 +34,15 @@ public class EventService {
 
         List<Event> events = eventPlanner.findEventsByCustomer(customer);
         for (Event event : events) {
-            benefitDetails.put(event, event.calculate(customer));
+            benefitDetails.put(event, event.calculateDiscount(customer));
         }
 
         if (benefitDetails.containsKey(Event.GIFT_EVENT)) {
-            benefitDetails.put(Event.GIFT_EVENT, getGiftAmount());
+            Gift gift = eventPlanner.requestGift();
+            benefitDetails.put(Event.GIFT_EVENT, gift.getTotalAmount());
         }
 
         return Collections.unmodifiableMap(benefitDetails);
-    }
-
-    private int getGiftAmount() {
-        return restaurant.getGiftAmount();
     }
 
     private int getBenefitAmount(Customer customer) {
@@ -56,7 +50,8 @@ public class EventService {
         int benefitAmount = getDiscountAmount(events, customer);
 
         if (events.contains(Event.GIFT_EVENT)) {
-            benefitAmount += getGiftAmount();
+            Gift gift = eventPlanner.requestGift();
+            benefitAmount += gift.getTotalAmount();
         }
 
         return benefitAmount;
@@ -69,7 +64,7 @@ public class EventService {
 
     public EventPreviewDto getEventPreviewDto(VisitDate visitDate, Orders orders) {
         Customer customer = Customer.reserveVisit(visitDate, orders);
-        Map<Menu, Integer> giftMenu = getGiftMenu(customer);
+        Gift giftMenu = getGiftMenu(customer);
         Map<Event, Integer> benefitDetails = getBenefitDetails(customer);
         List<Event> events = eventPlanner.findEventsByCustomer(customer);
         int discountAmount = getDiscountAmount(events, customer);
@@ -86,7 +81,7 @@ public class EventService {
 
     private int getDiscountAmount(List<Event> events, Customer customer) {
         return events.stream()
-                .mapToInt(event -> event.calculate(customer))
+                .mapToInt(event -> event.calculateDiscount(customer))
                 .sum();
     }
 }

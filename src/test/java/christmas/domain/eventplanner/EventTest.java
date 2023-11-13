@@ -65,7 +65,7 @@ class EventTest {
         Customer customer = Customer.reserveVisit(new VisitDate(visitDate), sampleOrders);
 
         //when
-        int discountAmount = christmasDDayDiscount.calculate(customer);
+        int discountAmount = christmasDDayDiscount.calculateDiscount(customer);
 
         //then
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
@@ -128,7 +128,7 @@ class EventTest {
         int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue();
 
         //when
-        int discountAmount = weekdayDiscount.calculate(customer);
+        int discountAmount = weekdayDiscount.calculateDiscount(customer);
 
         //then
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
@@ -191,7 +191,7 @@ class EventTest {
         int expectedDiscountAmount = EventConstants.WEEKEND_DISCOUNT_AMOUNT.getValue() * 3;
 
         //when
-        int discountAmount = weekendDiscount.calculate(customer);
+        int discountAmount = weekendDiscount.calculateDiscount(customer);
 
         //then
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);
@@ -233,7 +233,7 @@ class EventTest {
         int expectedDiscountAmount = EventConstants.SPECIAL_DISCOUNT_AMOUNT.getValue();
 
         //when
-        int discountAmount = specialDiscount.calculate(customer);
+        int discountAmount = specialDiscount.calculateDiscount(customer);
 
         //then
         assertThat(discountAmount).isEqualTo(expectedDiscountAmount);

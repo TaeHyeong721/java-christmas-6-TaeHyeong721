@@ -84,7 +84,7 @@
         Menu : 식당에서 제공하는 메뉴 enum클래스
         Order : 주문 메뉴와 개수를 담는 값 객체
         Orders : Order를 묶어서 List로 관리하는 일급컬렉션
-        Restaurant : 제공 가능한 메뉴를 관리하는 책임
+        Gift : 증정품을 관리하는 책임
         
     +--service
         EventService : 고객에게 적용될 이벤트 혜택을 미리보기 위한 데이터를 제공하는 클래스

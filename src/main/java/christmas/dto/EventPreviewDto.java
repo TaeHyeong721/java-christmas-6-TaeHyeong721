@@ -2,7 +2,7 @@ package christmas.dto;
 
 import christmas.domain.eventplanner.Event;
 import christmas.domain.eventplanner.EventBadge;
-import christmas.domain.restaurant.Menu;
+import christmas.domain.restaurant.Gift;
 import christmas.domain.restaurant.Order;
 import christmas.domain.restaurant.Orders;
 import java.text.NumberFormat;
@@ -13,20 +13,20 @@ import java.util.Map;
 public class EventPreviewDto {
 
     private final Orders orders;
-    private final Map<Menu, Integer> giftMenu;
+    private final Gift gift;
     private final Map<Event, Integer> benefitDetails;
     private final int discountAmount;
     private final EventBadge badge;
 
     public EventPreviewDto(
             Orders orders,
-            Map<Menu, Integer> giftMenu,
+            Gift gift,
             Map<Event, Integer> benefitDetails,
             int discountAmount,
             EventBadge badge
     ) {
         this.orders = orders;
-        this.giftMenu = giftMenu;
+        this.gift = gift;
         this.benefitDetails = benefitDetails;
         this.discountAmount = discountAmount;
         this.badge = badge;
@@ -48,12 +48,12 @@ public class EventPreviewDto {
     }
 
     public String getGiftMenu() {
-        if (giftMenu.isEmpty()) {
+        if (gift.isEmpty()) {
             return "없음\n";
         }
 
         StringBuilder sb = new StringBuilder();
-        giftMenu.forEach((menu, quantity) -> {
+        gift.getItems().forEach((menu, quantity) -> {
             sb.append(formatItem(menu.getName(), quantity));
             sb.append("\n");
         });

@@ -74,7 +74,7 @@ public enum Event {
         return visitDate <= EventConstants.CHRISTMAS_DATE.getValue();
     }
 
-    public int calculate(Customer customer) {
+    public int calculateDiscount(Customer customer) {
         return expression.apply(customer);
     }
 

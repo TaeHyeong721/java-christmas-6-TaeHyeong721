@@ -12,7 +12,6 @@ public class EventController {
 
     private final InputView inputView;
     private final OutputView outputView;
-
     private final EventService eventService;
 
     public EventController() {
@@ -22,14 +21,18 @@ public class EventController {
     }
 
     public void startEventPlanner() {
-        outputView.printWelcome();
+        printWelcomeMessage();
 
         VisitDate visitDate = retryInputForValidVisitDate();
         Orders orders = retryInputForValidOrders();
-        previewEventBenefit(visitDate, orders);
+        printEventPreviewBenefit(visitDate, orders);
     }
 
-    private void previewEventBenefit(VisitDate visitDate, Orders orders) {
+    private void printWelcomeMessage() {
+        outputView.printWelcome();
+    }
+
+    private void printEventPreviewBenefit(VisitDate visitDate, Orders orders) {
         EventPreviewDto eventPreviewDto = eventService.getEventPreviewDto(visitDate, orders);
 
         outputView.printPreviewMessage(visitDate);
