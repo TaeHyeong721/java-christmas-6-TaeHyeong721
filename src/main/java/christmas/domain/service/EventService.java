@@ -1,6 +1,7 @@
 package christmas.domain.service;
 
 import christmas.domain.customer.Customer;
+import christmas.domain.customer.VisitDate;
 import christmas.domain.eventplanner.Event;
 import christmas.domain.eventplanner.EventBadge;
 import christmas.domain.eventplanner.EventPlanner;
@@ -66,7 +67,7 @@ public class EventService {
         return EventBadge.fromBenefitAmount(benefitAmount);
     }
 
-    public EventPreviewDto getEventPreviewDto(int visitDate, Orders orders) {
+    public EventPreviewDto getEventPreviewDto(VisitDate visitDate, Orders orders) {
         Customer customer = Customer.reserveVisit(visitDate, orders);
         Map<Menu, Integer> giftMenu = getGiftMenu(customer);
         Map<Event, Integer> benefitDetails = getBenefitDetails(customer);

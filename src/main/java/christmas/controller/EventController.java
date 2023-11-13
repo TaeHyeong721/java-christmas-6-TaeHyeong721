@@ -1,5 +1,6 @@
 package christmas.controller;
 
+import christmas.domain.customer.VisitDate;
 import christmas.domain.restaurant.Orders;
 import christmas.domain.service.EventService;
 import christmas.dto.EventPreviewDto;
@@ -23,12 +24,12 @@ public class EventController {
     public void startEventPlanner() {
         outputView.printWelcome();
 
-        int visitDate = retryInputForValidVisitDate();
+        VisitDate visitDate = retryInputForValidVisitDate();
         Orders orders = retryInputForValidOrders();
         previewEventBenefit(visitDate, orders);
     }
 
-    private void previewEventBenefit(int visitDate, Orders orders) {
+    private void previewEventBenefit(VisitDate visitDate, Orders orders) {
         EventPreviewDto eventPreviewDto = eventService.getEventPreviewDto(visitDate, orders);
 
         outputView.printPreviewMessage(visitDate);
@@ -51,7 +52,7 @@ public class EventController {
         }
     }
 
-    private int retryInputForValidVisitDate() {
+    private VisitDate retryInputForValidVisitDate() {
         while (true) {
             try {
                 return inputView.readDate();

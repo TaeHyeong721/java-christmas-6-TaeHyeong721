@@ -5,20 +5,28 @@ import christmas.domain.restaurant.Orders;
 
 public class Customer {
 
-    private final int visitDate;
+    private final VisitDate visitDate;
     private final Orders orders;
 
-    private Customer(int visitDate, Orders orders) {
+    private Customer(VisitDate visitDate, Orders orders) {
+        validateNullCheck(visitDate, orders);
+
         this.visitDate = visitDate;
         this.orders = orders;
     }
 
-    public static Customer reserveVisit(int visitDate, Orders menus) {
-        return new Customer(visitDate, menus);
+    private static void validateNullCheck(VisitDate visitDate, Orders orders) {
+        if (visitDate == null || orders == null) {
+            throw new IllegalArgumentException("visitDate와 orders는 null일 수 없습니다.");
+        }
+    }
+
+    public static Customer reserveVisit(VisitDate visitDate, Orders orders) {
+        return new Customer(visitDate, orders);
     }
 
     public int getVisitDate() {
-        return visitDate;
+        return visitDate.value();
     }
 
     public int getOrderAmount() {

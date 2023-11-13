@@ -10,10 +10,17 @@ public class Orders {
     private final List<Order> orders;
 
     public Orders(List<Order> orders) {
+        validateEmpty(orders);
         validateDuplicateMenu(orders);
         validateMaxTotalQuantity(orders);
         validateOnlyBeverage(orders);
         this.orders = orders;
+    }
+
+    private void validateEmpty(List<Order> orders) {
+        if (orders == null || orders.isEmpty()) {
+            throw new IllegalArgumentException("orders는 null이거나 비어있을 수 없습니다.");
+        }
     }
 
     private void validateOnlyBeverage(List<Order> orders) {

@@ -1,6 +1,7 @@
 package christmas.view;
 
 import camp.nextstep.edu.missionutils.Console;
+import christmas.domain.customer.VisitDate;
 import christmas.domain.restaurant.Order;
 import christmas.domain.restaurant.Orders;
 import christmas.util.ErrorMessage;
@@ -10,20 +11,13 @@ import java.util.regex.Pattern;
 
 public class InputView {
 
-    public int readDate() {
+    public VisitDate readDate() {
         System.out.println("12월 중 식당 예상 방문 날짜는 언제인가요? (숫자만 입력해 주세요!)");
         String input = Console.readLine();
 
         int visitDate = convertStringToInt(input);
-        validateDateInRange(visitDate);
 
-        return visitDate;
-    }
-
-    private void validateDateInRange(int visitDate) {
-        if (visitDate < 1 || visitDate > 31) {
-            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT_VISIT_DATE.getMessage());
-        }
+        return new VisitDate(visitDate);
     }
 
     private int convertStringToInt(String input) {

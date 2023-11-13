@@ -3,6 +3,7 @@ package christmas.domain.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import christmas.domain.customer.Customer;
+import christmas.domain.customer.VisitDate;
 import christmas.domain.eventplanner.Event;
 import christmas.domain.eventplanner.EventBadge;
 import christmas.domain.fixture.TestDataFactory;
@@ -37,7 +38,7 @@ class EventServiceTest {
     @Test
     void 증정_이벤트_적용시_증정품을_제공한다() {
         //given
-        Customer customer = Customer.reserveVisit(3, sampleOrders);
+        Customer customer = Customer.reserveVisit(new VisitDate(3), sampleOrders);
         Set<Menu> allMenus = EnumSet.allOf(Menu.class);
 
         //when
@@ -56,7 +57,7 @@ class EventServiceTest {
                 new Order(Menu.CHOCOLATE_CAKE.getName(), 1)
         );
         Orders noGiftOrders = new Orders(orders);
-        Customer customer = Customer.reserveVisit(3, noGiftOrders);
+        Customer customer = Customer.reserveVisit(new VisitDate(3), noGiftOrders);
 
         //when
         Map<Menu, Integer> gift = eventService.getGiftMenu(customer);
@@ -68,7 +69,7 @@ class EventServiceTest {
     @Test
     void 고객정보를_받으면_혜택_내역을_반환한다() {
         //given
-        Customer customer = Customer.reserveVisit(24, sampleOrders);
+        Customer customer = Customer.reserveVisit(new VisitDate(24), sampleOrders);
         Map<Event, Integer> expectedBenefitDetails = createSampleBenefitDetails(customer);
 
         //when
@@ -98,7 +99,7 @@ class EventServiceTest {
     @Test
     void 총혜택_금액에_따라_이벤트_배지를_부여한다() {
         //given
-        Customer customer = Customer.reserveVisit(24, sampleOrders);
+        Customer customer = Customer.reserveVisit(new VisitDate(24), sampleOrders);
 
         //when
         EventBadge badge = eventService.getBadgeForBenefitAmount(customer);

@@ -1,5 +1,6 @@
 package christmas.view;
 
+import christmas.domain.customer.VisitDate;
 import christmas.dto.EventPreviewDto;
 import christmas.util.ErrorMessage;
 
@@ -13,8 +14,8 @@ public class OutputView {
         System.out.println("안녕하세요! 우테코 식당 12월 이벤트 플래너입니다.");
     }
 
-    public void printPreviewMessage(int visitDate) {
-        System.out.println(String.format("12월 %d일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!\n", visitDate));
+    public void printPreviewMessage(VisitDate visitDate) {
+        System.out.println(String.format("12월 %d일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!\n", visitDate.value()));
     }
 
     public void printMenu(EventPreviewDto eventPreview) {
