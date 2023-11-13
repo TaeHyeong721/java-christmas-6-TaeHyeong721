@@ -8,6 +8,7 @@ import christmas.domain.fixture.TestDataFactory;
 import christmas.domain.restaurant.Menu;
 import christmas.domain.restaurant.Order;
 import christmas.domain.restaurant.Orders;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -283,6 +284,45 @@ class EventTest {
         //then
         assertThat(customer.getOrderAmount()).isLessThan(120_000);
         assertThat(events).doesNotContain(Event.GIFT_EVENT);
+    }
+
+    @Test
+    void 할인_이벤트는_증정품이_없다() {
+        boolean noGiftDiscountEvent = Arrays.stream(Event.values())
+                .filter(event -> event != Event.GIFT_EVENT)
+                .allMatch(event -> event.getGift().isEmpty());
+
+        assertThat(noGiftDiscountEvent).isTrue();
+    }
+
+    @Test
+    void 혜택_금액은_증정_이벤트의_증정품_가격과_할인_이벤트의_할인금액이다() {
+        //given
+        Customer customer = Customer.reserveVisit(new VisitDate(1), sampleOrders);
+        List<Event> events = Event.from(customer);
+        int totalDiscountAmount = getTotalDiscountAmount(events, customer);
+        int totalGiftAmount = getTotalGiftAmount(events);
+
+        //when
+        int totalBenefitAmount = events.stream()
+                .mapToInt(event -> event.calculateBenefit(customer))
+                .sum();
+
+        //then
+        assertThat(totalBenefitAmount).isEqualTo(totalDiscountAmount + totalGiftAmount);
+    }
+
+    private static int getTotalGiftAmount(List<Event> events) {
+        return events.stream()
+                .filter(event -> event == Event.GIFT_EVENT)
+                .mapToInt(event -> event.getGift().getTotalAmount())
+                .sum();
+    }
+
+    private static int getTotalDiscountAmount(List<Event> events, Customer customer) {
+        return events.stream()
+                .mapToInt(event -> event.calculateDiscount(customer))
+                .sum();
     }
 
     @Test
