@@ -23,7 +23,7 @@ public class InputView {
         try {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 날짜입니다.");
+            throw new IllegalArgumentException("[ERROR] 유효하지 않은 숫자입니다.");
         }
     }
 
