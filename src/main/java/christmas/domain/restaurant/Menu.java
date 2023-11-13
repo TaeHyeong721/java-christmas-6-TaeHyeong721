@@ -31,7 +31,7 @@ public enum Menu {
                 .filter(menu -> menu.getName().equals(menuName))
                 .findFirst()
                 .orElseThrow(() ->
-                        new IllegalArgumentException("해당 이름으로 메뉴를 찾을 수 없습니다.")
+                        new IllegalArgumentException("[ERROR] 메뉴판에 없는 메뉴입니다.")
                 );
     }
 
