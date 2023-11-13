@@ -48,7 +48,7 @@
     - [x] 주문 메뉴가 20개 초과 시 예외 발생
     - [x] 음료만 주문하는 경우 예외 발생
     - [x] 모든 에러 메시지는 "[ERROR]"로 시작
-- [ ] 12월 이벤트 적용
+- [x] 12월 이벤트 적용
     - [x] 크리스마스 디데이 할인
     - [x] 평일(일요일~목요일) 디저트 메뉴 할인
     - [x] 주말(금요일,토요일) 메인 메뉴 할인
@@ -72,6 +72,13 @@
         Customer : 사용자로부터 입력받는 고객 정보를 담당
 
     +--eventplanner
+        +--strategy
+            EventStrategy : 이벤트 적용 조건과 할인 계산을 관리하는 전략패턴
+            ChristmasEventStrategy : 크리스마스 디데이 할인 전략
+            WeekdayEventStrategy : 평일 할인 전략
+            WeekEndEventStrategy : 주말 할인 전략
+            SpecialEventStrategy : 특별 할인 전략
+            GiftEventStrategy :  증정품 이벤트 전략
         DayType : 평일, 주말을 구분하는 상수 enum클래스
         Event : 12월 이벤트 목록을 관리하고 이벤트 할인 계산 로직을 가지고 있는 enum클래스
         EventBadge : 혜택 금액별 부여되는 이벤트 배지를 담당하는 enum클래스
