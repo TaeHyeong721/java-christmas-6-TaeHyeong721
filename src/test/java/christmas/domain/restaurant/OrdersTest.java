@@ -2,10 +2,17 @@ package christmas.domain.restaurant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class OrdersTest {
+
+    @Test
+    void 생성시_주문_목록이_없으면_예외_발생() {
+        assertThatThrownBy(() -> new Orders(Collections.emptyList()))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
     @Test
     void 생성시_중복_메뉴가_있는_경우_예외_발생() {

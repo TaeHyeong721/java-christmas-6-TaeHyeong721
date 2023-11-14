@@ -287,12 +287,16 @@ class EventTest {
     }
 
     @Test
-    void 할인_이벤트는_증정품이_없다() {
-        boolean noGiftDiscountEvent = Arrays.stream(Event.values())
+    void 증정_이벤트가_아니면_증정품은_없다() {
+        boolean noGiftEvent = Arrays.stream(Event.values())
                 .filter(event -> event != Event.GIFT_EVENT)
                 .noneMatch(Event::hasGift);
+        boolean emptyGiftEvent = Arrays.stream(Event.values())
+                .filter(event -> event != Event.GIFT_EVENT)
+                .allMatch(event -> event.getGift().isEmpty());
 
-        assertThat(noGiftDiscountEvent).isTrue();
+        assertThat(noGiftEvent).isTrue();
+        assertThat(emptyGiftEvent).isTrue();
     }
 
     @Test
