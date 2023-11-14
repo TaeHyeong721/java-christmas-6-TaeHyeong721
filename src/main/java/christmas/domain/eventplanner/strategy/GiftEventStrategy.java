@@ -30,6 +30,11 @@ public class GiftEventStrategy implements EventStrategy{
     }
 
     @Override
+    public boolean hasGift() {
+        return !gift.isEmpty();
+    }
+
+    @Override
     public Gift getGift() {
         return gift;
     }

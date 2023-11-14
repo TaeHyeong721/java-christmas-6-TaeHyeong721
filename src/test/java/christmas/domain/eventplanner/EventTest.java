@@ -290,7 +290,7 @@ class EventTest {
     void 할인_이벤트는_증정품이_없다() {
         boolean noGiftDiscountEvent = Arrays.stream(Event.values())
                 .filter(event -> event != Event.GIFT_EVENT)
-                .allMatch(event -> event.getGift().isEmpty());
+                .noneMatch(Event::hasGift);
 
         assertThat(noGiftDiscountEvent).isTrue();
     }

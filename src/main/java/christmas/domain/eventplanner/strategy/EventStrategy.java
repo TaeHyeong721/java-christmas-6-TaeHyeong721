@@ -11,5 +11,11 @@ public interface EventStrategy {
 
     int calculateBenefit(Customer customer);
 
-    Gift getGift();
+    default boolean hasGift() {
+        return false;
+    }
+
+    default Gift getGift() {
+        return Gift.empty();
+    }
 }

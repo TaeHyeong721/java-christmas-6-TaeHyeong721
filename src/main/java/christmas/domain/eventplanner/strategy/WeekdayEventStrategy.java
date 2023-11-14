@@ -4,7 +4,6 @@ import christmas.domain.customer.Customer;
 import christmas.domain.eventplanner.DayType;
 import christmas.domain.eventplanner.EventCalender;
 import christmas.domain.restaurant.Category;
-import christmas.domain.restaurant.Gift;
 
 public class WeekdayEventStrategy implements EventStrategy {
 
@@ -25,10 +24,5 @@ public class WeekdayEventStrategy implements EventStrategy {
     @Override
     public int calculateBenefit(Customer customer) {
         return calculateDiscount(customer);
-    }
-
-    @Override
-    public Gift getGift() {
-        return Gift.empty();
     }
 }

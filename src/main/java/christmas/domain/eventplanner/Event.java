@@ -53,6 +53,10 @@ public enum Event {
         return eventStrategy.calculateBenefit(customer);
     }
 
+    public boolean hasGift() {
+        return eventStrategy.hasGift();
+    }
+
     public Gift getGift() {
         return eventStrategy.getGift();
     }

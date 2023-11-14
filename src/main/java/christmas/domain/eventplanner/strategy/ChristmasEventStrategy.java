@@ -1,7 +1,6 @@
 package christmas.domain.eventplanner.strategy;
 
 import christmas.domain.customer.Customer;
-import christmas.domain.restaurant.Gift;
 
 public class ChristmasEventStrategy implements EventStrategy{
 
@@ -23,10 +22,5 @@ public class ChristmasEventStrategy implements EventStrategy{
     @Override
     public int calculateBenefit(Customer customer) {
         return calculateDiscount(customer);
-    }
-
-    @Override
-    public Gift getGift() {
-        return Gift.empty();
     }
 }

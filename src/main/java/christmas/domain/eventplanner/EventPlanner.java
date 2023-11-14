@@ -14,8 +14,8 @@ public class EventPlanner {
         List<Event> events = findEventsByCustomer(customer);
 
         return events.stream()
+                .filter(Event::hasGift)
                 .map(Event::getGift)
-                .filter(gift -> !gift.isEmpty())
                 .reduce(Gift.empty(), Gift::merge);
     }
 }
