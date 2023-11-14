@@ -70,6 +70,7 @@
 +--domain
     +--customer
         Customer : 사용자로부터 입력받는 고객 정보를 담당
+        VisitDate : 예약 날짜를 담는 값 객체
 
     +--eventplanner
         +--strategy
