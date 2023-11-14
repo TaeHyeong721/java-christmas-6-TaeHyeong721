@@ -84,14 +84,13 @@
         EventBadge : 혜택 금액별 부여되는 이벤트 배지를 담당하는 enum클래스
         EventCalender : 이벤트 달력의 역할과 책임을 담당
         EventConstants : 이벤트에 사용되는 상수 enum클래스
-        EventPlanner : 이벤트를 계획하고 관리하는 역할과 책임을 담당
     
     +--restaurant
         Category : 식당 메뉴의 코스 구분 enum클래스
+        Gift : 증정품을 관리하는 책임
         Menu : 식당에서 제공하는 메뉴 enum클래스
         Order : 주문 메뉴와 개수를 담는 값 객체
         Orders : Order를 묶어서 List로 관리하는 일급컬렉션
-        Gift : 증정품을 관리하는 책임
         
     +--service
         EventService : 고객에게 적용될 이벤트 혜택을 미리보기 위한 데이터를 제공하는 클래스

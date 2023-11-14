@@ -36,13 +36,43 @@ class EventServiceTest {
     }
 
     @Test
+    void 고객정보를_받으면_적용되는_이벤트_목록을_반환한다() {
+        //given
+        Customer customer = Customer.reserveVisit(new VisitDate(24), sampleOrders);
+
+        //when
+        List<Event> events = eventService.findEventsByCustomer(customer);
+
+        //then
+        assertThat(events).containsExactly(
+                Event.CHRISTMAS_D_DAY_DISCOUNT,
+                Event.WEEKDAY_DISCOUNT,
+                Event.SPECIAL_DISCOUNT,
+                Event.GIFT_EVENT
+        );
+    }
+
+    @Test
+    void 증정품을_주는_이벤트가_있으면_증정품을_반환한다() {
+        //given
+        Customer customer = Customer.reserveVisit(new VisitDate(3), sampleOrders);
+        Gift expectedGift = Gift.asGiveaway();
+
+        //when
+        Gift gift = eventService.gatherEligibleEventGifts(customer);
+
+        //then
+        assertThat(gift.getItems()).isEqualTo(expectedGift.getItems());
+    }
+
+    @Test
     void 증정_이벤트_적용시_증정품을_제공한다() {
         //given
         Customer customer = Customer.reserveVisit(new VisitDate(3), sampleOrders);
         Set<Menu> allMenus = EnumSet.allOf(Menu.class);
 
         //when
-        Gift gift = eventService.getGiftMenu(customer);
+        Gift gift = eventService.gatherEligibleEventGifts(customer);
         Map<Menu, Integer> giftItems = gift.getItems();
 
 
@@ -62,7 +92,7 @@ class EventServiceTest {
         Customer customer = Customer.reserveVisit(new VisitDate(3), noGiftOrders);
 
         //when
-        Gift gift = eventService.getGiftMenu(customer);
+        Gift gift = eventService.gatherEligibleEventGifts(customer);
 
         //then
         assertThat(gift.isEmpty()).isTrue();
