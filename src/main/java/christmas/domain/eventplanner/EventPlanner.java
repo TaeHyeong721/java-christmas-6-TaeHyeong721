@@ -11,7 +11,7 @@ public class EventPlanner {
     }
 
     public Gift getGift(Customer customer) {
-        List<Event> events = Event.from(customer);
+        List<Event> events = findEventsByCustomer(customer);
 
         return events.stream()
                 .map(Event::getGift)

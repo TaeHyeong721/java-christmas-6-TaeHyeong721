@@ -8,7 +8,7 @@ import christmas.domain.eventplanner.strategy.SpecialEventStrategy;
 import christmas.domain.eventplanner.strategy.WeekdayEventStrategy;
 import christmas.domain.eventplanner.strategy.WeekendEventStrategy;
 import christmas.domain.restaurant.Gift;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,18 +32,13 @@ public enum Event {
             return Collections.emptyList();
         }
 
-        List<Event> events = new ArrayList<>();
-        for (Event event : Event.values()) {
-            if (event.appliesToCustomer(customer)) {
-                events.add(event);
-            }
-        }
-
-        return Collections.unmodifiableList(events);
+        return Arrays.stream(Event.values())
+                .filter(event -> event.appliesToCustomer(customer))
+                .toList();
     }
 
     private static boolean isNotEligibleForEvent(Customer customer) {
-        return customer.getOrderAmount() < EventConstants.MINIMUM_ORDER_AMOUNT_FOR_EVENT.getValue();
+        return customer.getTotalOrderAmount() < EventConstants.MINIMUM_ORDER_AMOUNT_FOR_EVENT.getValue();
     }
 
     private boolean appliesToCustomer(Customer customer) {

@@ -21,12 +21,12 @@ public class Customer {
         return visitDate.value();
     }
 
-    public int getOrderAmount() {
+    public int getTotalOrderAmount() {
         return orders.getTotalAmount();
     }
 
     public int getTotalMenuQuantityByCategory(Category category) {
-        return orders.getTotalMenuQuantityByCategory(category);
+        return orders.getTotalQuantityByCategory(category);
     }
 
     public boolean hasMenuByCategory(Category category) {

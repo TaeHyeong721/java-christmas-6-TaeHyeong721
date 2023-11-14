@@ -1,5 +1,6 @@
 package christmas.domain.restaurant;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Orders {
@@ -23,31 +24,40 @@ public class Orders {
     }
 
     private void validateOnlyBeverage(List<Order> orders) {
-        boolean isOnlyBeverage = orders.stream()
-                .allMatch(Order::isBeverage);
-        if (isOnlyBeverage) {
+        if (hasOnlyBeverage(orders)) {
             throw new IllegalArgumentException("[ERROR] 음료만 주문 시, 주문할 수 없습니다.");
         }
     }
 
-    private void validateDuplicateMenu(List<Order> orders) {
-        boolean isDuplicateMenu = orders.stream()
-                .map(Order::getMenu)
-                .distinct()
-                .count() != orders.size();
+    private boolean hasOnlyBeverage(List<Order> orders) {
+        return orders.stream()
+                .allMatch(Order::isBeverage);
+    }
 
-        if (isDuplicateMenu) {
+    private void validateDuplicateMenu(List<Order> orders) {
+        if (hasDuplicateMenu(orders)) {
             throw new IllegalArgumentException("[ERROR] 중복 메뉴는 허용하지 않습니다.");
         }
     }
 
+    private boolean hasDuplicateMenu(List<Order> orders) {
+        return orders.stream()
+                .map(Order::getMenu)
+                .distinct()
+                .count() != orders.size();
+    }
+
     private void validateMaxTotalQuantity(List<Order> orders) {
-        int totalQuantity = orders.stream()
-                .mapToInt(Order::getQuantity)
-                .sum();
+        int totalQuantity = getTotalQuantity(orders);
         if (totalQuantity > MAX_TOTAL_QUANTITY) {
             throw new IllegalArgumentException("[ERROR] 메뉴는 한 번에 최대 20개까지만 주문할 수 있습니다.");
         }
+    }
+
+    private int getTotalQuantity(List<Order> orders) {
+        return orders.stream()
+                .mapToInt(Order::getQuantity)
+                .sum();
     }
 
     public int getTotalAmount() {
@@ -56,7 +66,7 @@ public class Orders {
                 .sum();
     }
 
-    public int getTotalMenuQuantityByCategory(Category category) {
+    public int getTotalQuantityByCategory(Category category) {
         return orders.stream()
                 .filter(order -> order.hasMenuByCategory(category))
                 .mapToInt(Order::getQuantity)
@@ -69,6 +79,6 @@ public class Orders {
     }
 
     public List<Order> getOrders() {
-        return orders;
+        return Collections.unmodifiableList(orders);
     }
 }

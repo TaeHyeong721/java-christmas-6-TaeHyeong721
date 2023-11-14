@@ -16,7 +16,7 @@ public class GiftEventStrategy implements EventStrategy{
 
     @Override
     public boolean checkEligibility(Customer customer) {
-        return customer.getOrderAmount() >= MINIMUM_AMOUNT;
+        return customer.getTotalOrderAmount() >= MINIMUM_AMOUNT;
     }
 
     @Override

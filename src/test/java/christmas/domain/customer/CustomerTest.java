@@ -22,7 +22,7 @@ class CustomerTest {
         Customer customer = Customer.reserveVisit(new VisitDate(1), sampleOrders);
 
         //when
-        int totalOrderAmount = customer.getOrderAmount();
+        int totalOrderAmount = customer.getTotalOrderAmount();
 
         //then
         assertThat(totalOrderAmount).isEqualTo(168_000);
