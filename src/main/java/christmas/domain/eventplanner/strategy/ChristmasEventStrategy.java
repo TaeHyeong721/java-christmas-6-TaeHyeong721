@@ -18,9 +18,4 @@ public class ChristmasEventStrategy implements EventStrategy{
     public int calculateDiscount(Customer customer) {
         return DISCOUNT_START_AMOUNT + (customer.getVisitDate() - FIRST_DAY_OF_MONTH) * DISCOUNT_INCREASE_UNIT;
     }
-
-    @Override
-    public int calculateBenefit(Customer customer) {
-        return calculateDiscount(customer);
-    }
 }

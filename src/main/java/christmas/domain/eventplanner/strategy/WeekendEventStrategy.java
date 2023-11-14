@@ -20,9 +20,4 @@ public class WeekendEventStrategy implements EventStrategy {
         int mainQuantity = customer.getTotalMenuQuantityByCategory(Category.MAIN_COURSE);
         return mainQuantity * DISCOUNT_AMOUNT_PER_QUANTITY;
     }
-
-    @Override
-    public int calculateBenefit(Customer customer) {
-        return calculateDiscount(customer);
-    }
 }

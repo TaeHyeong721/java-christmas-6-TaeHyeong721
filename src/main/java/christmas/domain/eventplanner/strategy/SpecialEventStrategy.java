@@ -16,9 +16,4 @@ public class SpecialEventStrategy implements EventStrategy{
     public int calculateDiscount(Customer customer) {
         return DISCOUNT_AMOUNT;
     }
-
-    @Override
-    public int calculateBenefit(Customer customer) {
-        return calculateDiscount(customer);
-    }
 }

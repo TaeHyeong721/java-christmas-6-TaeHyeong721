@@ -9,7 +9,9 @@ public interface EventStrategy {
 
     int calculateDiscount(Customer customer);
 
-    int calculateBenefit(Customer customer);
+    default int calculateBenefit(Customer customer) {
+        return calculateDiscount(customer);
+    }
 
     default boolean hasGift() {
         return false;

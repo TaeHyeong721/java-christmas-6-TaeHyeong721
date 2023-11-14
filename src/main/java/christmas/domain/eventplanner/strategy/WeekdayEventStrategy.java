@@ -20,9 +20,4 @@ public class WeekdayEventStrategy implements EventStrategy {
         int dessertQuantity = customer.getTotalMenuQuantityByCategory(Category.DESSERT);
         return dessertQuantity * DISCOUNT_AMOUNT_PER_QUANTITY;
     }
-
-    @Override
-    public int calculateBenefit(Customer customer) {
-        return calculateDiscount(customer);
-    }
 }
