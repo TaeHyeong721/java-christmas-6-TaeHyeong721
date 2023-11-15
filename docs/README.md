@@ -69,26 +69,26 @@
     EventController : 12월 이벤트의 흐름을 관리하는 컨트롤러
 +--domain
     +--customer
-        Customer : 사용자로부터 입력받는 고객 정보를 담당
+        Customer : 사용자로부터 입력받는 예약 정보를 담당
         VisitDate : 예약 날짜를 담는 값 객체
 
     +--eventplanner
         +--strategy
-            EventStrategy : 이벤트 적용 조건과 할인 계산을 관리하는 전략패턴
+            EventStrategy : 이벤트 적용 조건과 할인 계산, 증정품을 관리하는 전략패턴
             ChristmasEventStrategy : 크리스마스 디데이 할인 전략
             WeekdayEventStrategy : 평일 할인 전략
             WeekEndEventStrategy : 주말 할인 전략
             SpecialEventStrategy : 특별 할인 전략
             GiftEventStrategy :  증정품 이벤트 전략
         DayType : 평일, 주말을 구분하는 상수 enum클래스
-        Event : 12월 이벤트 목록을 관리하고 이벤트 할인 계산 로직을 가지고 있는 enum클래스
+        Event : 12월 이벤트 목록을 관리하고 이벤트별 전략을 적용하는 enum클래스
         EventBadge : 혜택 금액별 부여되는 이벤트 배지를 담당하는 enum클래스
         EventCalender : 이벤트 달력의 역할과 책임을 담당
         EventConstants : 이벤트에 사용되는 상수 enum클래스
     
     +--restaurant
         Category : 식당 메뉴의 코스 구분 enum클래스
-        Gift : 증정품을 관리하는 책임
+        Gift : 증정품 클래스
         Menu : 식당에서 제공하는 메뉴 enum클래스
         Order : 주문 메뉴와 개수를 담는 값 객체
         Orders : Order를 묶어서 List로 관리하는 일급컬렉션
