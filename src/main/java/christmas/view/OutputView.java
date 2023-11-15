@@ -15,41 +15,42 @@ public class OutputView {
     }
 
     public void printPreviewMessage(VisitDate visitDate) {
-        System.out.println(String.format("12월 %d일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!\n", visitDate.value()));
+        String message = String.format("12월 %d일에 우테코 식당에서 받을 이벤트 혜택 미리 보기!", visitDate.value());
+        System.out.println(message);
+        System.out.println();
     }
 
     public void printMenu(EventPreviewDto eventPreview) {
-        System.out.println("<주문 메뉴>");
-        System.out.println(eventPreview.getOrderMenu());
+        printSection("<주문 메뉴>", eventPreview.getOrderMenu());
     }
 
-    public void printOrderAmount(EventPreviewDto eventPreviewDto) {
-        System.out.println("<할인 전 총주문 금액>");
-        System.out.println(eventPreviewDto.getTotalOrderAmount());
+    public void printTotalOrderAmount(EventPreviewDto eventPreviewDto) {
+        printSection("<할인 전 총주문 금액>", eventPreviewDto.getTotalOrderAmount());
     }
 
     public void printGiftMenu(EventPreviewDto eventPreviewDto) {
-        System.out.println("<증정 메뉴>");
-        System.out.println(eventPreviewDto.getGiftMenu());
+        printSection("<증정 메뉴>", eventPreviewDto.getGiftMenu());
     }
 
     public void printBenefitDetails(EventPreviewDto eventPreviewDto) {
-        System.out.println("<혜택 내역>");
-        System.out.println(eventPreviewDto.getBenefitDetails());
+        printSection("<혜택 내역>", eventPreviewDto.getBenefitDetails());
     }
 
     public void printBenefitAmount(EventPreviewDto eventPreviewDto) {
-        System.out.println("<총혜택 금액>");
-        System.out.println(eventPreviewDto.getBenefitAmount());
+        printSection("<총혜택 금액>", eventPreviewDto.getBenefitAmount());
     }
 
     public void printPaymentAmount(EventPreviewDto eventPreviewDto) {
-        System.out.println("<할인 후 예상 결제 금액>");
-        System.out.println(eventPreviewDto.getPaymentAmount());
+        printSection("<할인 후 예상 결제 금액>", eventPreviewDto.getPaymentAmount());
     }
 
     public void printEventBadge(EventPreviewDto eventPreviewDto) {
-        System.out.println("<12월 이벤트 배지>");
-        System.out.println(eventPreviewDto.getEventBadge());
+        printSection("<12월 이벤트 배지>", eventPreviewDto.getEventBadge());
+    }
+
+    private void printSection(String title, String content) {
+        System.out.println(title);
+        System.out.println(content);
+        System.out.println();
     }
 }

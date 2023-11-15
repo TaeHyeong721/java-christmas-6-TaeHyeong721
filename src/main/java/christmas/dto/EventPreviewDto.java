@@ -9,8 +9,11 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class EventPreviewDto {
+
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     private final Orders orders;
     private final Gift gift;
@@ -33,32 +36,30 @@ public class EventPreviewDto {
     }
 
     public String getOrderMenu() {
-        StringBuilder sb = new StringBuilder();
+        StringJoiner joiner = new StringJoiner(LINE_SEPARATOR);
         List<Order> orderList = orders.getOrders();
         for (Order order : orderList) {
-            sb.append(formatItem(order.getMenuName(), order.getQuantity()));
-            sb.append("\n");
+            joiner.add(formatItem(order.getMenuName(), order.getQuantity()));
         }
 
-        return sb.toString();
+        return joiner.toString();
     }
 
     public String getTotalOrderAmount() {
-        return String.format("%s원\n", formatAmount(orders.getTotalAmount()));
+        return String.format("%s원", formatAmount(orders.getTotalAmount()));
     }
 
     public String getGiftMenu() {
         if (gift.isEmpty()) {
-            return "없음\n";
+            return "없음";
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringJoiner joiner = new StringJoiner(LINE_SEPARATOR);
         gift.getItems().forEach((menu, quantity) -> {
-            sb.append(formatItem(menu.getName(), quantity));
-            sb.append("\n");
+            joiner.add(formatItem(menu.getName(), quantity));
         });
 
-        return sb.toString();
+        return joiner.toString();
     }
 
     private String formatItem(String name, Integer quantity) {
@@ -67,39 +68,38 @@ public class EventPreviewDto {
 
     public String getBenefitDetails() {
         if (benefitDetails.isEmpty()) {
-            return "없음\n";
+            return "없음";
         }
 
-        StringBuilder sb = new StringBuilder();
+        StringJoiner joiner = new StringJoiner(LINE_SEPARATOR);
         benefitDetails.forEach((event, discount) -> {
-            sb.append(String.format("%s: -%s원", event.getName(), formatAmount(discount)));
-            sb.append("\n");
+            joiner.add(String.format("%s: -%s원", event.getName(), formatAmount(discount)));
         });
 
-        return sb.toString();
+        return joiner.toString();
     }
 
     public String getBenefitAmount() {
         if (benefitDetails.isEmpty()) {
-            return "0원\n";
+            return "0원";
         }
 
         int benefitAmount = benefitDetails.values().stream()
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        return String.format("-%s원\n", formatAmount(benefitAmount));
+        return String.format("-%s원", formatAmount(benefitAmount));
     }
 
     public String getPaymentAmount() {
         int ordersAmount = orders.getTotalAmount();
 
-        return String.format("%s원\n", formatAmount(ordersAmount - discountAmount));
+        return String.format("%s원", formatAmount(ordersAmount - discountAmount));
     }
 
     public String getEventBadge() {
         if (EventBadge.NONE.equals(badge)) {
-            return "없음\n";
+            return "없음";
         }
 
         return badge.getName();

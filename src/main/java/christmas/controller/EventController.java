@@ -38,7 +38,7 @@ public class EventController {
 
         outputView.printPreviewMessage(visitDate);
         outputView.printMenu(eventPreviewDto);
-        outputView.printOrderAmount(eventPreviewDto);
+        outputView.printTotalOrderAmount(eventPreviewDto);
         outputView.printGiftMenu(eventPreviewDto);
         outputView.printBenefitDetails(eventPreviewDto);
         outputView.printBenefitAmount(eventPreviewDto);
